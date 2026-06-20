@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xav's Science Revision</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green:#2ecc71; --green-light:#d5f5e3; --green-dark:#1a7a44;
+    --blue:#3498db; --blue-light:#d6eaf8; --blue-dark:#1a5276;
+    --orange:#e67e22; --orange-light:#fdebd0; --orange-dark:#784212;
+    --purple:#9b59b6; --purple-light:#e8daef; --purple-dark:#5b2c6f;
+    --red:#e74c3c; --red-light:#fadbd8;
+    --teal:#1abc9c; --teal-light:#d1f2eb; --teal-dark:#0e6655;
+    --pink:#e91e8c; --pink-light:#fce4ec; --pink-dark:#880e4f;
+    --indigo:#3f51b5; --indigo-light:#e8eaf6; --indigo-dark:#1a237e;
+    --amber:#ff8f00; --amber-light:#fff8e1; --amber-dark:#7f4500;
+    --cyan:#0097a7; --cyan-light:#e0f7fa; --cyan-dark:#004d57;
+    --lime:#7cb342; --lime-light:#f1f8e9; --lime-dark:#33691e;
+    --bg:#f7f9fc; --text:#1a1a2e; --card-radius:16px; --shadow:0 4px 20px rgba(0,0,0,0.10);
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+  header { background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%); color:white; padding:24px 24px 16px; text-align:center; }
+  header h1 { font-family:'Fredoka One',cursive; font-size:2rem; letter-spacing:1px; margin-bottom:4px; }
+  header p { font-size:0.9rem; opacity:0.75; font-weight:600; }
+
+  /* Exam badge */
+  .exam-badge { display:inline-block; background:#e74c3c; color:white; font-weight:800; font-size:0.8rem; padding:4px 14px; border-radius:999px; margin-top:8px; letter-spacing:0.5px; }
+
+  nav { display:flex; overflow-x:auto; background:#16213e; padding:0 12px; gap:3px; border-bottom:3px solid #0f3460; }
+  nav button { font-family:'Nunito',sans-serif; font-weight:800; font-size:0.75rem; padding:10px 12px; border:none; background:transparent; color:rgba(255,255,255,0.55); cursor:pointer; white-space:nowrap; border-bottom:3px solid transparent; margin-bottom:-3px; transition:all 0.2s; border-radius:8px 8px 0 0; }
+  nav button:hover { color:white; background:rgba(255,255,255,0.08); }
+  nav button.active { color:white; border-bottom-color:var(--green); background:rgba(255,255,255,0.12); }
+  #homeBtn { position:fixed; bottom:22px; right:18px; z-index:9999; background:#e74c3c; color:white; font-family:'Nunito',sans-serif; font-weight:900; font-size:1rem; border:none; border-radius:999px; padding:12px 20px; box-shadow:0 4px 16px rgba(0,0,0,0.3); cursor:pointer; transition:transform 0.15s,box-shadow 0.15s; }
+  #homeBtn:hover { transform:translateY(-3px); box-shadow:0 6px 20px rgba(0,0,0,0.35); }
+
+  main { padding:20px 16px; max-width:900px; margin:0 auto; }
+  .section { display:none; }
+  .section.active { display:block; }
+
+  .topic-badge { display:inline-block; font-size:0.73rem; font-weight:800; padding:4px 12px; border-radius:999px; margin-bottom:14px; letter-spacing:0.5px; text-transform:uppercase; }
+  .section-title { font-family:'Fredoka One',cursive; font-size:1.6rem; margin-bottom:5px; }
+  .section-sub { font-size:0.9rem; opacity:0.65; margin-bottom:20px; font-weight:600; }
+
+  /* ── FLASHCARD ── */
+  .flashcard-area { text-align:center; }
+  .card-counter { font-size:0.88rem; font-weight:700; opacity:0.5; margin-bottom:10px; }
+  .flashcard { width:100%; max-width:560px; min-height:200px; margin:0 auto 16px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .card-face { width:100%; min-height:200px; border-radius:var(--card-radius); box-shadow:var(--shadow); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px 20px; transition:all 0.25s; }
+  .card-label { font-size:0.7rem; font-weight:900; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px; opacity:0.55; }
+  .card-text { font-size:1.15rem; font-weight:700; line-height:1.5; text-align:center; }
+  .card-hint { margin-top:10px; font-size:0.78rem; font-weight:600; opacity:0.45; }
+  .card-controls { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:4px; }
+  .card-controls button { font-family:'Nunito',sans-serif; font-weight:800; font-size:0.88rem; padding:9px 20px; border:none; border-radius:999px; cursor:pointer; transition:transform 0.15s,box-shadow 0.15s; }
+  .card-controls button:hover { transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.15); }
+  .btn-flip { background:#1a1a2e; color:white; }
+  .btn-next { color:white; }
+  .btn-prev { background:#e8e8f0; color:#1a1a2e; }
+  .btn-shuffle { background:#e8e8f0; color:#1a1a2e; font-size:0.78rem; }
+
+  /* Got it / Not yet */
+  .self-assess { display:flex; gap:10px; justify-content:center; margin-top:12px; }
+  .btn-gotit { background:#2ecc71; color:white; font-family:'Nunito',sans-serif; font-weight:900; font-size:0.88rem; padding:9px 22px; border:none; border-radius:999px; cursor:pointer; transition:transform 0.15s; }
+  .btn-notyet { background:#e74c3c; color:white; font-family:'Nunito',sans-serif; font-weight:900; font-size:0.88rem; padding:9px 22px; border:none; border-radius:999px; cursor:pointer; transition:transform 0.15s; }
+  .btn-gotit:hover,.btn-notyet:hover { transform:translateY(-2px); }
+  .progress-wrap { background:#e0e0ec; border-radius:999px; height:8px; margin:14px 0 20px; overflow:hidden; }
+  .progress-bar { height:100%; border-radius:999px; transition:width 0.4s; }
+  .score-display { text-align:center; font-family:'Fredoka One',cursive; font-size:1.3rem; margin-top:6px; }
+
+  /* ── CLOZE ── */
+  .cloze-card { background:white; border-radius:var(--card-radius); box-shadow:var(--shadow); padding:18px 20px; margin-bottom:14px; border-left:6px solid; }
+  .cloze-card p { font-size:1rem; font-weight:600; line-height:1.9; margin-bottom:8px; }
+  .cloze-input { font-family:'Nunito',sans-serif; font-weight:700; font-size:0.95rem; border:2px solid #d0d0e0; border-radius:8px; padding:3px 8px; width:130px; text-align:center; background:#f7f9fc; transition:border-color 0.2s; outline:none; }
+  .cloze-input:focus { border-color:var(--blue); }
+  .cloze-input.correct { border-color:var(--green); background:var(--green-light); }
+  .cloze-input.wrong { border-color:var(--red); background:var(--red-light); }
+  .check-btn { font-family:'Nunito',sans-serif; font-weight:800; padding:9px 26px; border:none; border-radius:999px; cursor:pointer; font-size:0.92rem; margin-top:14px; color:white; transition:transform 0.15s; }
+  .check-btn:hover { transform:translateY(-2px); }
+  .cloze-result { font-weight:800; margin-top:10px; font-size:0.95rem; display:none; }
+
+  /* ── BRAIN DUMP ── */
+  .brain-card { background:white; border-radius:var(--card-radius); box-shadow:var(--shadow); padding:20px 22px; margin-bottom:18px; border-left:6px solid; }
+  .brain-card h3 { font-size:1rem; font-weight:800; margin-bottom:5px; }
+  .brain-card p { font-size:0.88rem; opacity:0.65; font-weight:600; margin-bottom:12px; }
+  .brain-lines { display:flex; flex-direction:column; gap:9px; }
+  .brain-line { display:flex; align-items:center; gap:9px; }
+  .line-num { font-weight:900; font-size:0.95rem; min-width:22px; opacity:0.5; }
+  .brain-input { font-family:'Nunito',sans-serif; font-weight:600; font-size:0.92rem; border:none; border-bottom:2px solid #d0d0e0; padding:5px 3px; width:100%; background:transparent; outline:none; transition:border-color 0.2s; }
+  .brain-input:focus { border-bottom-color:var(--blue); }
+
+  /* ── GLOSSARY ── */
+  .glossary-card { background:white; border-radius:var(--card-radius); box-shadow:var(--shadow); padding:16px 18px; margin-bottom:12px; display:flex; gap:14px; align-items:flex-start; border-left:6px solid; }
+  .glossary-word { font-family:'Fredoka One',cursive; font-size:1rem; min-width:130px; padding-top:3px; }
+  .glossary-def { font-family:'Nunito',sans-serif; font-weight:600; font-size:0.92rem; border:none; border-bottom:2px dashed #d0d0e0; width:100%; padding:3px 3px 5px; background:transparent; outline:none; font-style:italic; color:#555; transition:border-color 0.2s; resize:none; min-height:34px; line-height:1.5; }
+  .glossary-def:focus { border-bottom-color:var(--purple); font-style:normal; }
+
+  /* ── COLOUR THEMES ── */
+  .theme-green .topic-badge{background:var(--green-light);color:var(--green-dark)} .theme-green .section-title{color:var(--green-dark)} .theme-green .card-face{background:var(--green-light);border:2px solid var(--green)} .theme-green .card-label,.theme-green .card-text{color:var(--green-dark)} .theme-green .btn-next{background:var(--green)} .theme-green .check-btn{background:var(--green)} .theme-green .cloze-card,.theme-green .brain-card,.theme-green .glossary-card{border-left-color:var(--green)} .theme-green .glossary-word{color:var(--green-dark)} .theme-green .progress-bar{background:var(--green)}
+  .theme-orange .topic-badge{background:var(--orange-light);color:var(--orange-dark)} .theme-orange .section-title{color:var(--orange-dark)} .theme-orange .card-face{background:var(--orange-light);border:2px solid var(--orange)} .theme-orange .card-label,.theme-orange .card-text{color:var(--orange-dark)} .theme-orange .btn-next{background:var(--orange)} .theme-orange .check-btn{background:var(--orange)} .theme-orange .cloze-card,.theme-orange .brain-card,.theme-orange .glossary-card{border-left-color:var(--orange)} .theme-orange .glossary-word{color:var(--orange-dark)} .theme-orange .progress-bar{background:var(--orange)}
+  .theme-blue .topic-badge{background:var(--blue-light);color:var(--blue-dark)} .theme-blue .section-title{color:var(--blue-dark)} .theme-blue .card-face{background:var(--blue-light);border:2px solid var(--blue)} .theme-blue .card-label,.theme-blue .card-text{color:var(--blue-dark)} .theme-blue .btn-next{background:var(--blue)} .theme-blue .check-btn{background:var(--blue)} .theme-blue .cloze-card,.theme-blue .brain-card,.theme-blue .glossary-card{border-left-color:var(--blue)} .theme-blue .glossary-word{color:var(--blue-dark)} .theme-blue .progress-bar{background:var(--blue)}
+  .theme-purple .topic-badge{background:var(--purple-light);color:var(--purple-dark)} .theme-purple .section-title{color:var(--purple-dark)} .theme-purple .card-face{background:var(--purple-light);border:2px solid var(--purple)} .theme-purple .card-label,.theme-purple .card-text{color:var(--purple-dark)} .theme-purple .btn-next{background:var(--purple)} .theme-purple .check-btn{background:var(--purple)} .theme-purple .cloze-card,.theme-purple .brain-card,.theme-purple .glossary-card{border-left-color:var(--purple)} .theme-purple .glossary-word{color:var(--purple-dark)} .theme-purple .progress-bar{background:var(--purple)}
+  .theme-red .topic-badge{background:var(--red-light);color:#7b241c} .theme-red .section-title{color:#7b241c} .theme-red .card-face{background:var(--red-light);border:2px solid var(--red)} .theme-red .card-label,.theme-red .card-text{color:#7b241c} .theme-red .btn-next{background:var(--red)} .theme-red .check-btn{background:var(--red)} .theme-red .cloze-card,.theme-red .brain-card,.theme-red .glossary-card{border-left-color:var(--red)} .theme-red .glossary-word{color:#7b241c} .theme-red .progress-bar{background:var(--red)}
+  .theme-teal .topic-badge{background:var(--teal-light);color:var(--teal-dark)} .theme-teal .section-title{color:var(--teal-dark)} .theme-teal .card-face{background:var(--teal-light);border:2px solid var(--teal)} .theme-teal .card-label,.theme-teal .card-text{color:var(--teal-dark)} .theme-teal .btn-next{background:var(--teal)} .theme-teal .check-btn{background:var(--teal)} .theme-teal .cloze-card,.theme-teal .brain-card,.theme-teal .glossary-card{border-left-color:var(--teal)} .theme-teal .glossary-word{color:var(--teal-dark)} .theme-teal .progress-bar{background:var(--teal)}
+  .theme-pink .topic-badge{background:var(--pink-light);color:var(--pink-dark)} .theme-pink .section-title{color:var(--pink-dark)} .theme-pink .card-face{background:var(--pink-light);border:2px solid var(--pink)} .theme-pink .card-label,.theme-pink .card-text{color:var(--pink-dark)} .theme-pink .btn-next{background:var(--pink)} .theme-pink .check-btn{background:var(--pink)} .theme-pink .cloze-card,.theme-pink .brain-card,.theme-pink .glossary-card{border-left-color:var(--pink)} .theme-pink .glossary-word{color:var(--pink-dark)} .theme-pink .progress-bar{background:var(--pink)}
+  .theme-indigo .topic-badge{background:var(--indigo-light);color:var(--indigo-dark)} .theme-indigo .section-title{color:var(--indigo-dark)} .theme-indigo .card-face{background:var(--indigo-light);border:2px solid var(--indigo)} .theme-indigo .card-label,.theme-indigo .card-text{color:var(--indigo-dark)} .theme-indigo .btn-next{background:var(--indigo)} .theme-indigo .check-btn{background:var(--indigo)} .theme-indigo .cloze-card,.theme-indigo .brain-card,.theme-indigo .glossary-card{border-left-color:var(--indigo)} .theme-indigo .glossary-word{color:var(--indigo-dark)} .theme-indigo .progress-bar{background:var(--indigo)}
+  .theme-amber .topic-badge{background:var(--amber-light);color:var(--amber-dark)} .theme-amber .section-title{color:var(--amber-dark)} .theme-amber .card-face{background:var(--amber-light);border:2px solid var(--amber)} .theme-amber .card-label,.theme-amber .card-text{color:var(--amber-dark)} .theme-amber .btn-next{background:var(--amber)} .theme-amber .check-btn{background:var(--amber)} .theme-amber .cloze-card,.theme-amber .brain-card,.theme-amber .glossary-card{border-left-color:var(--amber)} .theme-amber .glossary-word{color:var(--amber-dark)} .theme-amber .progress-bar{background:var(--amber)}
+  .theme-cyan .topic-badge{background:var(--cyan-light);color:var(--cyan-dark)} .theme-cyan .section-title{color:var(--cyan-dark)} .theme-cyan .card-face{background:var(--cyan-light);border:2px solid var(--cyan)} .theme-cyan .card-label,.theme-cyan .card-text{color:var(--cyan-dark)} .theme-cyan .btn-next{background:var(--cyan)} .theme-cyan .check-btn{background:var(--cyan)} .theme-cyan .cloze-card,.theme-cyan .brain-card,.theme-cyan .glossary-card{border-left-color:var(--cyan)} .theme-cyan .glossary-word{color:var(--cyan-dark)} .theme-cyan .progress-bar{background:var(--cyan)}
+  .theme-lime .topic-badge{background:var(--lime-light);color:var(--lime-dark)} .theme-lime .section-title{color:var(--lime-dark)} .theme-lime .card-face{background:var(--lime-light);border:2px solid var(--lime)} .theme-lime .card-label,.theme-lime .card-text{color:var(--lime-dark)} .theme-lime .btn-next{background:var(--lime)} .theme-lime .check-btn{background:var(--lime)} .theme-lime .cloze-card,.theme-lime .brain-card,.theme-lime .glossary-card{border-left-color:var(--lime)} .theme-lime .glossary-word{color:var(--lime-dark)} .theme-lime .progress-bar{background:var(--lime)}
+
+  hr.divider { border:none; border-top:2px dashed #e0e0ec; margin:24px 0; }
+
+  /* ── PRE-READ ── */
+  .preread { border-radius:var(--card-radius); padding:20px 22px; margin-bottom:20px; border:2px solid; }
+  .preread-title { font-family:'Fredoka One',cursive; font-size:1.3rem; margin-bottom:4px; display:flex; align-items:center; gap:8px; }
+  .preread-sub { font-size:0.82rem; font-weight:700; opacity:0.65; margin-bottom:16px; }
+  .preread-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+  .preread-card { background:white; border-radius:12px; padding:14px 14px; box-shadow:0 2px 8px rgba(0,0,0,0.07); }
+  .preread-card h4 { font-size:0.85rem; font-weight:900; margin-bottom:8px; }
+  .preread-card ul { padding-left:16px; }
+  .preread-card li { font-size:0.82rem; font-weight:600; line-height:1.7; }
+  .preread-equation { background:#1a1a2e; color:white; border-radius:10px; padding:12px 16px; text-align:center; font-family:'Fredoka One',cursive; font-size:1.1rem; margin:12px 0; letter-spacing:0.5px; }
+  .preread-badge { display:inline-block; font-size:0.72rem; font-weight:800; padding:3px 10px; border-radius:999px; margin-right:4px; margin-bottom:4px; }
+  .preread-ready { display:block; width:100%; padding:12px; border:none; border-radius:999px; font-family:'Fredoka One',cursive; font-size:1rem; cursor:pointer; color:white; margin-top:8px; transition:all 0.2s; }
+  .preread-ready:hover { transform:translateY(-2px); opacity:0.9; }
+  .key-fact { display:flex; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid rgba(0,0,0,0.06); }
+  .key-fact:last-child { border-bottom:none; }
+  .key-fact-icon { font-size:1.2rem; min-width:24px; }
+  .key-fact-text { font-size:0.83rem; font-weight:600; line-height:1.5; }
+  @media(max-width:500px){ .preread-grid{grid-template-columns:1fr} }
+  @media(max-width:500px){ header h1{font-size:1.5rem} .card-text{font-size:1rem} .glossary-card{flex-direction:column;gap:5px} .glossary-word{min-width:unset} }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🔬 Xav's Science Revision</h1>
+  <p>Flashcards · Fill in the Blanks · Brain Dumps · Glossary</p>
+  <span class="exam-badge">📅 End of Year Exam — June 2026</span>
+</header>
+
+<nav id="mainNav">
+  <button class="active" onclick="showTab('cells',event)">🔬 Cells</button>
+  <button onclick="showTab('repro',event)">🧬 Reproduction</button>
+  <button onclick="showTab('verts',event)">🐟 Vertebrates</button>
+  <button onclick="showTab('photo',event)">🌿 Photosynthesis</button>
+  <button onclick="showTab('food',event)">🦁 Food Chains</button>
+  <button onclick="showTab('eco',event)">🌍 Ecosystems</button>
+  <button onclick="showTab('dna',event)">🧬 DNA</button>
+  <button onclick="showTab('var',event)">📊 Variation</button>
+  <button onclick="showTab('states',event)">💧 States</button>
+  <button onclick="showTab('metals',event)">⚙️ Metals</button>
+  <button onclick="showTab('circuits',event)">⚡ Circuits</button>
+  <button onclick="showTab('energy',event)">🔋 Energy</button>
+  <button onclick="showTab('particles',event)">⚛️ Particles</button>
+  <button onclick="showTab('chroma',event)">🎨 Chromatography</button>
+  <button onclick="showTab('solubility',event)">🧪 Solubility</button>
+</nav>
+
+<button id="homeBtn" onclick="document.getElementById('mainNav').scrollIntoView({behavior:'smooth'});window.scrollTo({top:0,behavior:'smooth'})">🏠 Topics</button>
+
+<main>
+
+<!-- CELLS -->
+<div id="cells" class="section active theme-teal">
+  <span class="topic-badge">Biology — Cells & Organisation</span>
+  <h2 class="section-title">Cells, Tissues, Organs & Systems</h2>
+  <p class="section-sub">🃏 Flashcards — say the answer out loud, then tap to check!</p>
+  <div class="flashcard-area">
+    <div class="card-counter" id="cellsCounter"></div>
+    <div class="flashcard" onclick="flipCard('cells')">
+      <div class="card-face" id="cellsFace"><span class="card-label">Question</span><span class="card-text"></span><span class="card-hint">Tap to reveal answer</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="cellsBar" style="width:0%"></div></div>
+    <div class="score-display" id="cellsScore">Got It: 0 | Not Yet: 0</div>
+    <div class="card-controls">
+      <button class="btn-prev" onclick="prevCard('cells')">← Prev</button>
+      <button class="btn-flip" onclick="flipCard('cells')">Flip</button>
+      <button class="btn-next" onclick="nextCard('cells')">Next →</button>
+    </div>
+    <div class="self-assess" id="cellsAssess" style="display:none">
+      <button class="btn-gotit" onclick="markCard('cells',true)">✅ Got It!</button>
+      <button class="btn-notyet" onclick="markCard('cells',false)">❌ Not Yet</button>
+    </div>
+    <div style="margin-top:10px;"><button class="btn-shuffle" onclick="shuffleCards('cells')">🔀 Shuffle</button></div>
+  </div>
+  <hr class="divider">
+  <p class="section-sub">✏️ Fill in the Blanks</p>
+  <div id="cellsCloze"></div>
+  <div style="text-align:center;"><button class="check-btn" onclick="checkCloze('cells')">Check My Answers</button><div class="cloze-result" id="cellsClozeResult"></div></div>
+  <hr class="divider">
+  <p class="section-sub">🧠 Brain Dump</p>
+  <div id="cellsBrain"></div>
+  <hr class="divider">
+  <p class="section-sub">📖 Key Word Glossary</p>
+  <div id="cellsGlossary"></div>
+</div>
+
+<!-- REPRODUCTION -->
+<div id="repro" class="section theme-pink">
+  <span class="topic-badge">Biology — Reproduction</span>
+  <h2 class="section-title">Reproduction & Sex Cells</h2>
+  <p class="section-sub">🃏 Flashcards — say the answer out loud, then tap to check!</p>
+  <div class="flashcard-area">
+    <div class="card-counter" id="reproCounter"></div>
+    <div class="flashcard" onclick="flipCard('repro')">
+      <div class="card-face" id="reproFace"><span class="card-label">Question</span><span class="card-text"></span><span class="card-hint">Tap to reveal answer</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="reproBar" style="width:0%"></div></div>
+    <div class="score-display" id="reproScore">Got It: 0 | Not Yet: 0</div>
+    <div class="card-controls">
+      <button class="btn-prev" onclick="prevCard('repro')">← Prev</button>
+      <button class="btn-flip" onclick="flipCard('repro')">Flip</button>
+      <button class="btn-next" onclick="nextCard('repro')">Next →</button>
+    </div>
+    <div class="self-assess" id="reproAssess" style="display:none">
+      <button class="btn-gotit" onclick="markCard('repro',true)">✅ Got It!</button>
+      <button class="btn-notyet" onclick="markCard('repro',false)">❌ Not Yet</button>
+    </div>
+    <div style="margin-top:10px;"><button class="btn-shuffle" onclick="shuffleCards('repro')">🔀 Shuffle</button></div>
+  </div>
+  <hr class="divider">
+  <p class="section-sub">✏️ Fill in the Blanks</p>
+  <div id="reproCloze"></div>
+  <div style="text-align:center;"><button class="check-btn" onclick="checkCloze('repro')">Check My Answers</button><div class="cloze-result" id="reproClozeResult"></div></div>
+  <hr class="divider">
+  <p class="section-sub">🧠 Brain Dump</p>
+  <div id="reproBrain"></div>
+  <hr class="divider">
+  <p class="section-sub">📖 Key Word Glossary</p>
+  <div id="reproGlossary"></div>
+</div>
+
+<!-- VERTEBRATES -->
+<div id="verts" class="section theme-lime">
+  <span class="topic-badge">Biology — Classification</span>
+  <h2 class="section-title">Vertebrates & Classification</h2>
+  <p class="section-sub">🃏 Flashcards — say the answer out loud, then tap to check!</p>
+  <div class="flashcard-area">
+    <div class="card-counter" id="vertsCounter"></div>
+    <div class="flashcard" onclick="flipCard('verts')">
+      <div class="card-face" id="vertsFace"><span class="card-label">Question</span><span class="card-text"></span><span class="card-hint">Tap to reveal answer</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="vertsBar" style="width:0%"></div></div>
+    <div class="score-display" id="vertsScore">Got It: 0 | Not Yet: 0</div>
+    <div class="card-controls">
+      <button class="btn-prev" onclick="prevCard('verts')">← Prev</button>
+      <button class="btn-flip" onclick="flipCard('verts')">Flip</button>
+      <button class="btn-next" onclick="nextCard('verts')">Next →</button>
+    </div>
+    <div class="self-assess" id="vertsAssess" style="display:none">
+      <button class="btn-gotit" onclick="markCard('verts',true)">✅ Got It!</button>
+      <button class="btn-notyet" onclick="markCard('verts',false)">❌ Not Yet</button>
+    </div>
+    <div style="margin-top:10px;"><button class="btn-shuffle" onclick="shuffleCards('verts')">🔀 Shuffle</button></div>
+  </div>
+  <hr class="divider">
+  <p class="section-sub">✏️ Fill in the Blanks</p>
+  <div id="vertsCloze"></div>
+  <div style="text-align:center;"><button class="check-btn" onclick="checkCloze('verts')">Check My Answers</button><div class="cloze-result" id="vertsClozeResult"></div></div>
+  <hr class="divider">
+  <p class="section-sub">🧠 Brain Dump</p>
+  <div id="vertsBrain"></div>
+  <hr class="divider">
+  <p class="section-sub">📖 Key Word Glossary</p>
+  <div id="vertsGlossary"></div>
+</div>
+
+<!-- PHOTOSYNTHESIS -->
+<div id="photo" class="section theme-green">
+  <span class="topic-badge">Section 3 — Plants & Ecosystems</span>
+  <h2 class="section-title">Plant Nutrition & Photosynthesis</h2>
+  <p class="section-sub">🃏 Flashcards — say the answer out loud, then tap to check!</p>
+  <div class="flashcard-area">
+    <div class="card-counter" id="photoCounter"></div>
+    <div class="flashcard" onclick="flipCard('photo')">
+      <div class="card-face" id="photoFace"><span class="card-label">Question</span><span class="card-text"></span><span class="card-hint">Tap to reveal answer</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="photoBar" style="width:0%"></div></div>
+    <div class="score-display" id="photoScore">Got It: 0 | Not Yet: 0</div>
+    <div class="card-controls">
+      <button class="btn-prev" onclick="prevCard('photo')">← Prev</button>
+      <button class="btn-flip" onclick="flipCard('photo')">Flip</button>
+      <button class="btn-next" onclick="nextCard('photo')">Next →</button>
+    </div>
+    <div class="self-assess" id="photoAssess" style="display:none">
+      <button class="btn-gotit" onclick="markCard('photo',true)">✅ Got It!</button>
+      <button class="btn-notyet" onclick="markCard('photo',false)">❌ Not Yet</button>
+    </div>
+    <div style="margin-top:10px;"><button class="btn-shuffle" onclick="shuffleCards('photo')">🔀 Shuffle</button></div>
+  </div>
+  <hr class="divider">
+  <p class="section-sub">✏️ Fill in the Blanks</p>
+  <div id="photoCloze"></div>
+  <div style="text-align:center;"><button class="check-btn" onclick="checkCloze('photo')">Check My Answers</button><div class="cloze-result" id="photoClozeResult"></div></div>
+  <hr class="divider">
+  <p class="section-sub">🧠 Brain Dump</p>
+  <div id="photoBrain"></div>
+  <hr class="divider">
+  <p class="section-sub">📖 Key Word Glossary</p>
+  <div id="photoGlossary"></div>
+</div>
+
+<!-- FOOD CHAINS -->
+<div id="food" class="section theme-orange">
+  <span class="topic-badge">Section 3 — Plants & Ecosystems</span>
+  <h2 class="section-title">Food Chains & Food Webs</h2>
+  <p class="section-sub">🃏 Flashcards — say the answer out loud, then tap to check!</p>
+  <div class="flashcard-area">
+    <div class="card-counter" id="foodCounter"></div>
+    <div class="flashcard" onclick="flipCard('food')">
+      <div class="card-face" id="foodFace"><span class="card-label">Question</span><span class="card-text"></span><span class="card-hint">Tap to reveal answer</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="foodBar" style="width:0%"></div></div>
+    <div class="score-display" id="foodScore">Got It: 0 | Not Yet: 0</div>
+    <div class="card-controls">
+      <button class="btn-prev" onclick="prevCard('food')">← Prev</button>
+      <button class="btn-flip" onclick="flipCard('food')">Flip</button>
+      <button class="btn-next" onclick="nextCard('food')">Next →</button>
+    </div>
+    <div class="self-assess" id="foodAssess" style="display:none">
+      <button class="btn-gotit" onclick="markCard('food',true)">✅ Got It!</button>
+      <button class="btn-notyet" onclick="markCard('food',false)">❌ Not Yet</button>
+    </div>
+    <div style="margin-top:10px;"><button class="btn-shuffle" onclick="shuffleCards('food')">🔀 Shuffle</button></div>
+  </div>
+  <hr class="divider">
+  <p class="section-sub">✏️ Fill in the Blanks</p>
+  <div id="foodCloze"></div>
+  <div style="text-align:center;"><button class="check-btn" onclick="checkCloze('food')">Check My Answers</button><div class="cloze-result" id="foodClozeResult"></div></div>
+  <hr class="divider">
+  <p class="section-sub">🧠 Brain Dump</p>
+  <div id="foodBrain"></div>
+  <hr class="divider">
+  <p class="section-sub">📖 Key Word Glossary</p>
+  <div id="foodGlossary"></div>
+</div>
+
+<!-- ECOSYSTEMS -->
+<div id="eco" class="section theme-blue">
+  <span class="topic-badge">Section 3 — Plants & Ecosystems</span>
+  <h2 class="section-title">Dependence on Other Organisms</h2>
+  <p class="section-sub">🃏 Flashcards — say the answer out loud, then tap to check!</p>
+  <div class="flashcard-area">
+    <div class="card-counter" id="ecoCounter"></div>
+    <div class="flashcard" onclick="flipCard('eco')">
+      <div class="card-face" id="ecoFace"><span class="card-label">Question</span><span class="card-text"></span><span class="card-hint">Tap to reveal answer</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="ecoBar" style="width:0%"></div></div>
+    <div class="score-display" id="ecoScore">Got It: 0 | Not Yet: 0</div>
+    <div class="card-controls">
+      <button class="btn-prev" onclick="prevCard('eco')">← Prev</button>
+      <button class="btn-flip" onclick="flipCard('eco')">Flip</button>
+      <button class="btn-next" onclick="nextCard('eco')">Next →</button>
+    </div>
+    <div class="self-assess" id="ecoAssess" style="display:none">
+      <button class="btn-gotit" onclick="markCard('eco',true)">✅ Got It!</button>
+      <button class="btn-notyet" onclick="markCard('eco',false)">❌ Not Yet</button>
+    </div>
+    <div style="margin-top:10px;"><button class="btn-shuffle" onclick="shuffleCards('eco')">🔀 Shuffle</button></div>
+  </div>
+  <hr class="divider">
+  <p class="section-sub">✏️ Fill in the Blanks</p>
+  <div id="ecoCloze"></div>
+  <div style="text-align:center;"><button class="check-btn" onclick="checkCloze('eco')">Check My Answers</button><div class="cloze-result" id="ecoClozeResult"></div></div>
+  <hr class="divider">
+  <p class="section-sub">🧠 Brain Dump</p>
+  <div id="ecoBrain"></div>
+  <hr class="divider">
+  <p class="section-sub">📖 Key Word Glossary</p>
+  <div id="ecoGlossary"></div>
+</div>
+
+<!-- DNA -->
+<div id="dna" class="section theme-purple">
+  <span class="topic-badge">Section 4 — Inheritance, Variation & Survival</span>
+  <h2 class="section-title">DNA & Inheritance</h2>
+  <p class="section-sub">🃏 Flashcards — say the answer out loud, then tap to check!</p>
+  <div class="flashcard-area">
+    <div class="card-counter" id="dnaCounter"></div>
+    <div class="flashcard" onclick="flipCard('dna')">
+      <div class="card-face" id="dnaFace"><span class="card-label">Question</span><span class="card-text"></span><span class="card-hint">Tap to reveal answer</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="dnaBar" style="width:0%"></div></div>
+    <div class="score-display" id="dnaScore">Got It: 0 | Not Yet: 0</div>
+    <div class="card-controls">
+      <button class="btn-prev" onclick="prevCard('dna')">← Prev</button>
+      <button class="btn-flip" onclick="flipCard('dna')">Flip</button>
+      <button class="btn-next" onclick="nextCard('dna')">Next →</button>
+    </div>
+    <div class="self-assess" id="dnaAssess" style="display:none">
+      <button class="btn-gotit" onclick="markCard('dna',true)">✅ Got It!</button>
+      <button class="btn-notyet" onclick="markCard('dna',false)">❌ Not Yet</button>
+    </div>
+    <div style="margin-top:10px;"><button class="btn-shuffle" onclick="shuffleCards('dna')">🔀 Shuffle</button></div>
+  </div>
+  <hr class="divider">
+  <p class="section-sub">✏️ Fill in the Blanks</p>
+  <div id="dnaCloze"></div>
+  <div style="text-align:center;"><button class="check-btn" onclick="checkCloze('dna')">Check My Answers</button><div class="cloze-result" id="dnaClozeResult"></div></div>
+  <hr class="divider">
+  <p class="section-sub">🧠 Brain Dump</p>
+  <div id="dnaBrain"></div>
+  <hr class="divider">
+  <p class="section-sub">📖 Key Word Glossary</p>
+  <div id="dnaGlossary"></div>
+</div>
+
+<!-- VARIATION -->
+<div id="var" class="section theme-red">
+  <span class="topic-badge">Section 4 — Inheritance, Variation & Survival</span>
+  <h2 class="section-title">Variation</h2>
+  <p class="section-sub">🃏 Flashcards — say the answer out loud, then tap to check!</p>
+  <div class="flashcard-area">
+    <div class="card-counter" id="varCounter"></div>
+    <div class="flashcard" onclick="flipCard('var')">
+      <div class="card-face" id="varFace"><span class="card-label">Question</span><span class="card-text"></span><span class="card-hint">Tap to reveal answer</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="varBar" style="width:0%"></div></div>
+    <div class="score-display" id="varScore">Got It: 0 | Not Yet: 0</div>
+    <div class="card-controls">
+      <button class="btn-prev" onclick="prevCard('var')">← Prev</button>
+      <button class="btn-flip" onclick="flipCard('var')">Flip</button>
+      <button class="btn-next" onclick="nextCard('var')">Next →</button>
+    </div>
+    <div class="self-assess" id="varAssess" style="display:none">
+      <button class="btn-gotit" onclick="markCard('var',true)">✅ Got It!</button>
+      <button class="btn-notyet" onclick="markCard('var',false)">❌ Not Yet</button>
+    </div>
+    <div style="margin-top:10px;"><button class="btn-shuffle" onclick="shuffleCards('var')">🔀 Shuffle</button></div>
+  </div>
+  <hr class="divider">
+  <p class="section-sub">✏️ Fill in the Blanks</p>
+  <div id="varCloze"></div>
+  <div style="text-align:center;"><button class="check-btn" onclick="checkCloze('var')">Check My Answers</button><div class="cloze-result" id="varClozeResult"></div></div>
+  <hr class="divider">
+  <p class="section-sub">🧠 Brain Dump</p>
+  <div id="varBrain"></div>
+  <hr class="divider">
+  <p class="section-sub">📖 Key Word Glossary</p>
+  <div id="varGlossary"></div>
+</div>
+
+<!-- STATES OF MATTER -->
+<div id="states" class="section theme-cyan">
+  <span class="topic-badge">Chemistry — States of Matter</span>
+  <h2 class="section-title">States of Matter & Changes of State</h2>
+
+  <div class="preread" style="background:#e0f7fa;border-color:#0097a7">
+    <div class="preread-title" style="color:#004d57">📖 Read This First</div>
+    <div class="preread-sub">New to this topic? Read through before you practise.</div>
+    <div class="preread-grid">
+      <div class="preread-card">
+        <h4 style="color:#0097a7">🧊 SOLID</h4>
+        <div class="key-fact"><span class="key-fact-icon">📦</span><span class="key-fact-text">Particles packed tightly in a fixed, regular arrangement</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🔒</span><span class="key-fact-text">Cannot flow or be compressed</span></div>
+        <div class="key-fact"><span class="key-fact-icon">📐</span><span class="key-fact-text">Keeps its own shape and volume</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🔊</span><span class="key-fact-text">Particles vibrate but cannot move around</span></div>
+      </div>
+      <div class="preread-card">
+        <h4 style="color:#0097a7">💧 LIQUID</h4>
+        <div class="key-fact"><span class="key-fact-icon">🌊</span><span class="key-fact-text">Particles close but can move past each other</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🫙</span><span class="key-fact-text">Takes the shape of its container</span></div>
+        <div class="key-fact"><span class="key-fact-icon">📏</span><span class="key-fact-text">Keeps the same volume</span></div>
+        <div class="key-fact"><span class="key-fact-icon">💨</span><span class="key-fact-text">Can flow but cannot be compressed</span></div>
+      </div>
+      <div class="preread-card">
+        <h4 style="color:#0097a7">☁️ GAS</h4>
+        <div class="key-fact"><span class="key-fact-icon">💨</span><span class="key-fact-text">Particles far apart with very weak forces between them</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🫧</span><span class="key-fact-text">Fills any container — no fixed shape or volume</span></div>
+        <div class="key-fact"><span class="key-fact-icon">⚡</span><span class="key-fact-text">Moves fast in all directions</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🗜️</span><span class="key-fact-text">Can be compressed (squashed)</span></div>
+      </div>
+      <div class="preread-card">
+        <h4 style="color:#0097a7">🔄 Changes of State</h4>
+        <div class="key-fact"><span class="key-fact-icon">🔥</span><span class="key-fact-text"><strong>Melting</strong> — solid → liquid (heat)</span></div>
+        <div class="key-fact"><span class="key-fact-icon">❄️</span><span class="key-fact-text"><strong>Freezing</strong> — liquid → solid (cool)</span></div>
+        <div class="key-fact"><span class="key-fact-icon">♨️</span><span class="key-fact-text"><strong>Evaporation/Boiling</strong> — liquid → gas (heat)</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🌫️</span><span class="key-fact-text"><strong>Condensation</strong> — gas → liquid (cool)</span></div>
+        <div class="key-fact"><span class="key-fact-icon">✨</span><span class="key-fact-text"><strong>Sublimation</strong> — solid → gas directly</span></div>
+      </div>
+    </div>
+    <div class="preread-equation">Water melts at 0°C &nbsp;·&nbsp; Water boils at 100°C</div>
+    <div style="font-size:0.8rem;font-weight:700;color:#004d57;margin-top:8px;">💡 Remember: physical changes don't make new substances — mass stays the same!</div>
+    <button class="preread-ready" style="background:#0097a7" onclick="this.parentElement.style.display='none'">Got it — let's practise! ✅</button>
+  </div>
+  <p class="section-sub">🃏 Flashcards — say the answer out loud, then tap to check!</p>
+  <div class="flashcard-area">
+    <div class="card-counter" id="statesCounter"></div>
+    <div class="flashcard" onclick="flipCard('states')">
+      <div class="card-face" id="statesFace"><span class="card-label">Question</span><span class="card-text"></span><span class="card-hint">Tap to reveal answer</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="statesBar" style="width:0%"></div></div>
+    <div class="score-display" id="statesScore">Got It: 0 | Not Yet: 0</div>
+    <div class="card-controls">
+      <button class="btn-prev" onclick="prevCard('states')">← Prev</button>
+      <button class="btn-flip" onclick="flipCard('states')">Flip</button>
+      <button class="btn-next" onclick="nextCard('states')">Next →</button>
+    </div>
+    <div class="self-assess" id="statesAssess" style="display:none">
+      <button class="btn-gotit" onclick="markCard('states',true)">✅ Got It!</button>
+      <button class="btn-notyet" onclick="markCard('states',false)">❌ Not Yet</button>
+    </div>
+    <div style="margin-top:10px;"><button class="btn-shuffle" onclick="shuffleCards('states')">🔀 Shuffle</button></div>
+  </div>
+  <hr class="divider">
+  <p class="section-sub">✏️ Fill in the Blanks</p>
+  <div id="statesCloze"></div>
+  <div style="text-align:center;"><button class="check-btn" onclick="checkCloze('states')">Check My Answers</button><div class="cloze-result" id="statesClozeResult"></div></div>
+  <hr class="divider">
+  <p class="section-sub">🧠 Brain Dump</p>
+  <div id="statesBrain"></div>
+  <hr class="divider">
+  <p class="section-sub">📖 Key Word Glossary</p>
+  <div id="statesGlossary"></div>
+</div>
+
+<!-- METALS -->
+<div id="metals" class="section theme-amber">
+  <span class="topic-badge">Chemistry — Metals & Materials</span>
+  <h2 class="section-title">Metals & Non-Metals</h2>
+  <p class="section-sub">🃏 Flashcards — say the answer out loud, then tap to check!</p>
+  <div class="flashcard-area">
+    <div class="card-counter" id="metalsCounter"></div>
+    <div class="flashcard" onclick="flipCard('metals')">
+      <div class="card-face" id="metalsFace"><span class="card-label">Question</span><span class="card-text"></span><span class="card-hint">Tap to reveal answer</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="metalsBar" style="width:0%"></div></div>
+    <div class="score-display" id="metalsScore">Got It: 0 | Not Yet: 0</div>
+    <div class="card-controls">
+      <button class="btn-prev" onclick="prevCard('metals')">← Prev</button>
+      <button class="btn-flip" onclick="flipCard('metals')">Flip</button>
+      <button class="btn-next" onclick="nextCard('metals')">Next →</button>
+    </div>
+    <div class="self-assess" id="metalsAssess" style="display:none">
+      <button class="btn-gotit" onclick="markCard('metals',true)">✅ Got It!</button>
+      <button class="btn-notyet" onclick="markCard('metals',false)">❌ Not Yet</button>
+    </div>
+    <div style="margin-top:10px;"><button class="btn-shuffle" onclick="shuffleCards('metals')">🔀 Shuffle</button></div>
+  </div>
+  <hr class="divider">
+  <p class="section-sub">✏️ Fill in the Blanks</p>
+  <div id="metalsCloze"></div>
+  <div style="text-align:center;"><button class="check-btn" onclick="checkCloze('metals')">Check My Answers</button><div class="cloze-result" id="metalsClozeResult"></div></div>
+  <hr class="divider">
+  <p class="section-sub">🧠 Brain Dump</p>
+  <div id="metalsBrain"></div>
+  <hr class="divider">
+  <p class="section-sub">📖 Key Word Glossary</p>
+  <div id="metalsGlossary"></div>
+</div>
+
+<!-- CIRCUITS -->
+<div id="circuits" class="section theme-indigo">
+  <span class="topic-badge">Physics — Electrical Circuits</span>
+  <h2 class="section-title">Electrical Circuits</h2>
+
+  <div class="preread" style="background:#e8eaf6;border-color:#3f51b5">
+    <div class="preread-title" style="color:#1a237e">📖 Read This First</div>
+    <div class="preread-sub">New to this topic? Read through before you practise.</div>
+    <div class="preread-grid">
+      <div class="preread-card">
+        <h4 style="color:#3f51b5">⚡ Key Definitions</h4>
+        <div class="key-fact"><span class="key-fact-icon">⚡</span><span class="key-fact-text"><strong>Current</strong> — flow of electrical charge around a circuit. Measured in <strong>amps (A)</strong></span></div>
+        <div class="key-fact"><span class="key-fact-icon">🔋</span><span class="key-fact-text"><strong>Voltage</strong> — the push that drives current around. Measured in <strong>volts (V)</strong></span></div>
+        <div class="key-fact"><span class="key-fact-icon">🌀</span><span class="key-fact-text"><strong>Resistance</strong> — how much a component opposes current. Measured in <strong>ohms (Ω)</strong></span></div>
+        <div class="key-fact"><span class="key-fact-icon">🔄</span><span class="key-fact-text">Current is NOT used up as it flows — it is always the same around a circuit</span></div>
+      </div>
+      <div class="preread-card">
+        <h4 style="color:#3f51b5">🔗 Series vs Parallel</h4>
+        <div class="key-fact"><span class="key-fact-icon">1️⃣</span><span class="key-fact-text"><strong>Series</strong> — one single loop. If one bulb breaks, ALL go out</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🔀</span><span class="key-fact-text"><strong>Parallel</strong> — separate branches. If one bulb breaks, others STAY ON</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🏠</span><span class="key-fact-text">Your home uses parallel circuits — that's why one light going off doesn't turn off everything</span></div>
+      </div>
+      <div class="preread-card">
+        <h4 style="color:#3f51b5">📏 Measuring Tools</h4>
+        <div class="key-fact"><span class="key-fact-icon">🅰️</span><span class="key-fact-text"><strong>Ammeter</strong> — measures current in amps. Connected in SERIES</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🅥</span><span class="key-fact-text"><strong>Voltmeter</strong> — measures voltage in volts. Connected in PARALLEL</span></div>
+      </div>
+      <div class="preread-card">
+        <h4 style="color:#3f51b5">🔣 Circuit Symbols</h4>
+        <div class="key-fact"><span class="key-fact-icon">🔋</span><span class="key-fact-text"><strong>Battery</strong> — two lines (long +, short −)</span></div>
+        <div class="key-fact"><span class="key-fact-icon">💡</span><span class="key-fact-text"><strong>Bulb</strong> — circle with X inside</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🔘</span><span class="key-fact-text"><strong>Switch open</strong> — broken line; <strong>closed</strong> — complete line</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🅰️</span><span class="key-fact-text"><strong>Ammeter</strong> — circle with A; <strong>Voltmeter</strong> — circle with V</span></div>
+      </div>
+    </div>
+    <div class="preread-equation">Resistance = Voltage ÷ Current &nbsp;·&nbsp; R = V ÷ I</div>
+    <div style="font-size:0.8rem;font-weight:700;color:#1a237e;margin-top:8px;">💡 Think of voltage like water pressure and current like the flow of water — the battery is the pump!</div>
+    <button class="preread-ready" style="background:#3f51b5" onclick="this.parentElement.style.display='none'">Got it — let's practise! ✅</button>
+  </div>
+  <p class="section-sub">🃏 Flashcards — say the answer out loud, then tap to check!</p>
+  <div class="flashcard-area">
+    <div class="card-counter" id="circuitsCounter"></div>
+    <div class="flashcard" onclick="flipCard('circuits')">
+      <div class="card-face" id="circuitsFace"><span class="card-label">Question</span><span class="card-text"></span><span class="card-hint">Tap to reveal answer</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="circuitsBar" style="width:0%"></div></div>
+    <div class="score-display" id="circuitsScore">Got It: 0 | Not Yet: 0</div>
+    <div class="card-controls">
+      <button class="btn-prev" onclick="prevCard('circuits')">← Prev</button>
+      <button class="btn-flip" onclick="flipCard('circuits')">Flip</button>
+      <button class="btn-next" onclick="nextCard('circuits')">Next →</button>
+    </div>
+    <div class="self-assess" id="circuitsAssess" style="display:none">
+      <button class="btn-gotit" onclick="markCard('circuits',true)">✅ Got It!</button>
+      <button class="btn-notyet" onclick="markCard('circuits',false)">❌ Not Yet</button>
+    </div>
+    <div style="margin-top:10px;"><button class="btn-shuffle" onclick="shuffleCards('circuits')">🔀 Shuffle</button></div>
+  </div>
+  <hr class="divider">
+  <p class="section-sub">✏️ Fill in the Blanks</p>
+  <div id="circuitsCloze"></div>
+  <div style="text-align:center;"><button class="check-btn" onclick="checkCloze('circuits')">Check My Answers</button><div class="cloze-result" id="circuitsClozeResult"></div></div>
+  <hr class="divider">
+  <p class="section-sub">🧠 Brain Dump</p>
+  <div id="circuitsBrain"></div>
+  <hr class="divider">
+  <p class="section-sub">📖 Key Word Glossary</p>
+  <div id="circuitsGlossary"></div>
+</div>
+
+<!-- ENERGY -->
+<div id="energy" class="section theme-orange">
+  <span class="topic-badge">Physics — Energy</span>
+  <h2 class="section-title">Energy Stores & Transfers</h2>
+
+  <div class="preread" style="background:#fff8e1;border-color:#ff8f00">
+    <div class="preread-title" style="color:#7f4500">📖 Read This First</div>
+    <div class="preread-sub">New to this topic? Read through before you practise.</div>
+    <div class="preread-grid">
+      <div class="preread-card">
+        <h4 style="color:#ff8f00">🔋 The 6 Energy Stores</h4>
+        <div class="key-fact"><span class="key-fact-icon">⚡</span><span class="key-fact-text"><strong>Kinetic</strong> — energy of movement. Faster = more</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🍎</span><span class="key-fact-text"><strong>Gravitational potential</strong> — stored due to height. Higher = more</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🌡️</span><span class="key-fact-text"><strong>Thermal</strong> — stored as heat in a substance</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🥗</span><span class="key-fact-text"><strong>Chemical</strong> — stored in food, fuel, batteries</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🌀</span><span class="key-fact-text"><strong>Elastic potential</strong> — stored in stretched/squashed objects</span></div>
+        <div class="key-fact"><span class="key-fact-icon">⚛️</span><span class="key-fact-text"><strong>Nuclear</strong> — stored in the nucleus of atoms</span></div>
+      </div>
+      <div class="preread-card">
+        <h4 style="color:#ff8f00">🔄 Energy Transfers</h4>
+        <div class="key-fact"><span class="key-fact-icon">🔑</span><span class="key-fact-text">Energy is <strong>never created or destroyed</strong> — only transferred from one store to another</span></div>
+        <div class="key-fact"><span class="key-fact-icon">💡</span><span class="key-fact-text">Torch: chemical → electrical → light + thermal</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🎢</span><span class="key-fact-text">Roller coaster: gravitational potential → kinetic</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🏹</span><span class="key-fact-text">Bow and arrow: elastic potential → kinetic</span></div>
+      </div>
+      <div class="preread-card">
+        <h4 style="color:#ff8f00">♻️ Renewable Resources</h4>
+        <div class="key-fact"><span class="key-fact-icon">✅</span><span class="key-fact-text">Will NOT run out</span></div>
+        <div class="key-fact"><span class="key-fact-icon">☀️</span><span class="key-fact-text">Solar, wind, tidal, hydroelectric, geothermal, biomass</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🌍</span><span class="key-fact-text">Most originally come from the Sun's energy</span></div>
+      </div>
+      <div class="preread-card">
+        <h4 style="color:#ff8f00">🏭 Non-Renewable Resources</h4>
+        <div class="key-fact"><span class="key-fact-icon">❌</span><span class="key-fact-text">Will run out one day</span></div>
+        <div class="key-fact"><span class="key-fact-icon">⛽</span><span class="key-fact-text">Coal, oil, natural gas (fossil fuels), nuclear</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🦕</span><span class="key-fact-text">Fossil fuels took millions of years to form from dead plants and animals</span></div>
+      </div>
+    </div>
+    <div class="preread-equation">Law of Conservation of Energy: energy cannot be created or destroyed</div>
+    <button class="preread-ready" style="background:#ff8f00" onclick="this.parentElement.style.display='none'">Got it — let's practise! ✅</button>
+  </div>
+  <p class="section-sub">🃏 Flashcards — say the answer out loud, then tap to check!</p>
+  <div class="flashcard-area">
+    <div class="card-counter" id="energyCounter"></div>
+    <div class="flashcard" onclick="flipCard('energy')">
+      <div class="card-face" id="energyFace"><span class="card-label">Question</span><span class="card-text"></span><span class="card-hint">Tap to reveal answer</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="energyBar" style="width:0%"></div></div>
+    <div class="score-display" id="energyScore">Got It: 0 | Not Yet: 0</div>
+    <div class="card-controls">
+      <button class="btn-prev" onclick="prevCard('energy')">← Prev</button>
+      <button class="btn-flip" onclick="flipCard('energy')">Flip</button>
+      <button class="btn-next" onclick="nextCard('energy')">Next →</button>
+    </div>
+    <div class="self-assess" id="energyAssess" style="display:none">
+      <button class="btn-gotit" onclick="markCard('energy',true)">✅ Got It!</button>
+      <button class="btn-notyet" onclick="markCard('energy',false)">❌ Not Yet</button>
+    </div>
+    <div style="margin-top:10px;"><button class="btn-shuffle" onclick="shuffleCards('energy')">🔀 Shuffle</button></div>
+  </div>
+  <hr class="divider">
+  <p class="section-sub">✏️ Fill in the Blanks</p>
+  <div id="energyCloze"></div>
+  <div style="text-align:center;"><button class="check-btn" onclick="checkCloze('energy')">Check My Answers</button><div class="cloze-result" id="energyClozeResult"></div></div>
+  <hr class="divider">
+  <p class="section-sub">🧠 Brain Dump</p>
+  <div id="energyBrain"></div>
+  <hr class="divider">
+  <p class="section-sub">📖 Key Word Glossary</p>
+  <div id="energyGlossary"></div>
+</div>
+
+<!-- PARTICLES -->
+<div id="particles" class="section theme-cyan">
+  <span class="topic-badge">Chemistry — Particle Theory</span>
+  <h2 class="section-title">Particle Theory, Diffusion & Brownian Motion</h2>
+
+  <div class="preread" style="background:#e0f7fa;border-color:#0097a7">
+    <div class="preread-title" style="color:#004d57">📖 Read This First</div>
+    <div class="preread-sub">New to this topic? Read through before you practise.</div>
+    <div class="preread-grid">
+      <div class="preread-card">
+        <h4 style="color:#0097a7">⚛️ The Big Idea</h4>
+        <div class="key-fact"><span class="key-fact-icon">🔬</span><span class="key-fact-text">All materials are made of <strong>tiny particles</strong> — too small to see</span></div>
+        <div class="key-fact"><span class="key-fact-icon">📦</span><span class="key-fact-text"><strong>Solid</strong> — particles tightly packed, fixed position, vibrate only</span></div>
+        <div class="key-fact"><span class="key-fact-icon">💧</span><span class="key-fact-text"><strong>Liquid</strong> — particles close, can move past each other, flow</span></div>
+        <div class="key-fact"><span class="key-fact-icon">☁️</span><span class="key-fact-text"><strong>Gas</strong> — particles far apart, move fast in all directions</span></div>
+      </div>
+      <div class="preread-card">
+        <h4 style="color:#0097a7">🌡️ Temperature & Particles</h4>
+        <div class="key-fact"><span class="key-fact-icon">🔥</span><span class="key-fact-text">Heat a substance → particles gain energy → move faster</span></div>
+        <div class="key-fact"><span class="key-fact-icon">📏</span><span class="key-fact-text">Particles spread further apart → substance expands</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🌡️</span><span class="key-fact-text">This explains how thermometers work — liquid expands when heated</span></div>
+      </div>
+      <div class="preread-card">
+        <h4 style="color:#0097a7">💨 Diffusion</h4>
+        <div class="key-fact"><span class="key-fact-icon">👃</span><span class="key-fact-text">Particles spread from where there are <strong>lots of them</strong> to where there are <strong>fewer</strong></span></div>
+        <div class="key-fact"><span class="key-fact-icon">🌸</span><span class="key-fact-text">Example: perfume spreads across a room</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🔑</span><span class="key-fact-text">Moves from <strong>high concentration</strong> → <strong>low concentration</strong></span></div>
+        <div class="key-fact"><span class="key-fact-icon">♨️</span><span class="key-fact-text">Faster at higher temperatures — particles have more energy</span></div>
+      </div>
+      <div class="preread-card">
+        <h4 style="color:#0097a7">🎲 Brownian Motion</h4>
+        <div class="key-fact"><span class="key-fact-icon">🎱</span><span class="key-fact-text">The <strong>random</strong> movement of particles suspended in a liquid or gas</span></div>
+        <div class="key-fact"><span class="key-fact-icon">💥</span><span class="key-fact-text">Caused by collisions with other invisible particles</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🔭</span><span class="key-fact-text">First seen with pollen grains in water under a microscope</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🧠</span><span class="key-fact-text">Einstein explained it in 1905 — proved atoms exist!</span></div>
+      </div>
+    </div>
+    <div class="preread-equation">Diffusion: HIGH concentration → LOW concentration (particles spread out)</div>
+    <button class="preread-ready" style="background:#0097a7" onclick="this.parentElement.style.display='none'">Got it — let's practise! ✅</button>
+  </div>
+  <p class="section-sub">🃏 Flashcards — say the answer out loud, then tap to check!</p>
+  <div class="flashcard-area">
+    <div class="card-counter" id="particlesCounter"></div>
+    <div class="flashcard" onclick="flipCard('particles')">
+      <div class="card-face" id="particlesFace"><span class="card-label">Question</span><span class="card-text"></span><span class="card-hint">Tap to reveal answer</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="particlesBar" style="width:0%"></div></div>
+    <div class="score-display" id="particlesScore">Got It: 0 | Not Yet: 0</div>
+    <div class="card-controls">
+      <button class="btn-prev" onclick="prevCard('particles')">← Prev</button>
+      <button class="btn-flip" onclick="flipCard('particles')">Flip</button>
+      <button class="btn-next" onclick="nextCard('particles')">Next →</button>
+    </div>
+    <div class="self-assess" id="particlesAssess" style="display:none">
+      <button class="btn-gotit" onclick="markCard('particles',true)">✅ Got It!</button>
+      <button class="btn-notyet" onclick="markCard('particles',false)">❌ Not Yet</button>
+    </div>
+    <div style="margin-top:10px;"><button class="btn-shuffle" onclick="shuffleCards('particles')">🔀 Shuffle</button></div>
+  </div>
+  <hr class="divider">
+  <p class="section-sub">✏️ Fill in the Blanks</p>
+  <div id="particlesCloze"></div>
+  <div style="text-align:center;"><button class="check-btn" onclick="checkCloze('particles')">Check My Answers</button><div class="cloze-result" id="particlesClozeResult"></div></div>
+  <hr class="divider">
+  <p class="section-sub">🧠 Brain Dump</p>
+  <div id="particlesBrain"></div>
+  <hr class="divider">
+  <p class="section-sub">📖 Key Word Glossary</p>
+  <div id="particlesGlossary"></div>
+</div>
+
+<!-- CHROMATOGRAPHY -->
+<div id="chroma" class="section theme-purple">
+  <span class="topic-badge">Chemistry — Separating Mixtures</span>
+  <h2 class="section-title">Chromatography</h2>
+
+  <div class="preread" style="background:#e8daef;border-color:#9b59b6">
+    <div class="preread-title" style="color:#5b2c6f">📖 Read This First</div>
+    <div class="preread-sub">New to this topic? Read through before you practise.</div>
+    <div class="preread-grid">
+      <div class="preread-card">
+        <h4 style="color:#9b59b6">🎨 What is Chromatography?</h4>
+        <div class="key-fact"><span class="key-fact-icon">🔍</span><span class="key-fact-text">A technique to <strong>separate mixtures</strong> — especially inks and dyes</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🖊️</span><span class="key-fact-text">For example — is a black pen ink one colour or many mixed together?</span></div>
+        <div class="key-fact"><span class="key-fact-icon">👮</span><span class="key-fact-text">Used in crime labs to identify unknown substances!</span></div>
+      </div>
+      <div class="preread-card">
+        <h4 style="color:#9b59b6">🧪 How It Works</h4>
+        <div class="key-fact"><span class="key-fact-icon">📄</span><span class="key-fact-text"><strong>Stationary phase</strong> = the paper — it stays still</span></div>
+        <div class="key-fact"><span class="key-fact-icon">💧</span><span class="key-fact-text"><strong>Mobile phase</strong> = the solvent (water) — it moves UP the paper</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🏃</span><span class="key-fact-text">More soluble substances travel FURTHER up the paper</span></div>
+        <div class="key-fact"><span class="key-fact-icon">⬆️</span><span class="key-fact-text">The starting spot must be ABOVE the solvent level — or it washes away</span></div>
+      </div>
+      <div class="preread-card">
+        <h4 style="color:#9b59b6">📊 Reading Results</h4>
+        <div class="key-fact"><span class="key-fact-icon">1️⃣</span><span class="key-fact-text"><strong>One spot</strong> = pure substance — it doesn't separate</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🔢</span><span class="key-fact-text"><strong>Multiple spots</strong> = a mixture — each component travels differently</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🔄</span><span class="key-fact-text">Same Rf value = likely the same substance</span></div>
+      </div>
+      <div class="preread-card">
+        <h4 style="color:#9b59b6">📐 Rf Value</h4>
+        <div class="key-fact"><span class="key-fact-icon">📏</span><span class="key-fact-text">Rf = distance substance travels ÷ distance solvent travels</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🔢</span><span class="key-fact-text">Always between 0 and 1</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🆔</span><span class="key-fact-text">Use Rf values to identify unknown substances by comparing to known ones</span></div>
+      </div>
+    </div>
+    <div class="preread-equation">Rf = distance substance travels ÷ distance solvent travels</div>
+    <div style="font-size:0.8rem;font-weight:700;color:#5b2c6f;margin-top:8px;">💡 Remember: stationary = stays still (paper), mobile = moves (solvent/water)</div>
+    <button class="preread-ready" style="background:#9b59b6" onclick="this.parentElement.style.display='none'">Got it — let's practise! ✅</button>
+  </div>
+  <p class="section-sub">🃏 Flashcards — say the answer out loud, then tap to check!</p>
+  <div class="flashcard-area">
+    <div class="card-counter" id="chromaCounter"></div>
+    <div class="flashcard" onclick="flipCard('chroma')">
+      <div class="card-face" id="chromaFace"><span class="card-label">Question</span><span class="card-text"></span><span class="card-hint">Tap to reveal answer</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="chromaBar" style="width:0%"></div></div>
+    <div class="score-display" id="chromaScore">Got It: 0 | Not Yet: 0</div>
+    <div class="card-controls">
+      <button class="btn-prev" onclick="prevCard('chroma')">← Prev</button>
+      <button class="btn-flip" onclick="flipCard('chroma')">Flip</button>
+      <button class="btn-next" onclick="nextCard('chroma')">Next →</button>
+    </div>
+    <div class="self-assess" id="chromaAssess" style="display:none">
+      <button class="btn-gotit" onclick="markCard('chroma',true)">✅ Got It!</button>
+      <button class="btn-notyet" onclick="markCard('chroma',false)">❌ Not Yet</button>
+    </div>
+    <div style="margin-top:10px;"><button class="btn-shuffle" onclick="shuffleCards('chroma')">🔀 Shuffle</button></div>
+  </div>
+  <hr class="divider">
+  <p class="section-sub">✏️ Fill in the Blanks</p>
+  <div id="chromaCloze"></div>
+  <div style="text-align:center;"><button class="check-btn" onclick="checkCloze('chroma')">Check My Answers</button><div class="cloze-result" id="chromaClozeResult"></div></div>
+  <hr class="divider">
+  <p class="section-sub">🧠 Brain Dump</p>
+  <div id="chromaBrain"></div>
+  <hr class="divider">
+  <p class="section-sub">📖 Key Word Glossary</p>
+  <div id="chromaGlossary"></div>
+</div>
+
+<!-- SOLUBILITY -->
+<div id="solubility" class="section theme-teal">
+  <span class="topic-badge">Chemistry — Solubility</span>
+  <h2 class="section-title">Solubility</h2>
+
+  <div class="preread" style="background:#d1f2eb;border-color:#1abc9c">
+    <div class="preread-title" style="color:#0e6655">📖 Read This First</div>
+    <div class="preread-sub">New to this topic? Read through before you practise.</div>
+    <div class="preread-grid">
+      <div class="preread-card">
+        <h4 style="color:#1abc9c">🧂 Key Words</h4>
+        <div class="key-fact"><span class="key-fact-icon">✅</span><span class="key-fact-text"><strong>Soluble</strong> — dissolves in a solvent (e.g. salt in water)</span></div>
+        <div class="key-fact"><span class="key-fact-icon">❌</span><span class="key-fact-text"><strong>Insoluble</strong> — does NOT dissolve (e.g. sand in water)</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🧂</span><span class="key-fact-text"><strong>Solute</strong> — the substance that dissolves (e.g. salt)</span></div>
+        <div class="key-fact"><span class="key-fact-icon">💧</span><span class="key-fact-text"><strong>Solvent</strong> — the liquid doing the dissolving (e.g. water)</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🫙</span><span class="key-fact-text"><strong>Solution</strong> — the mixture formed (e.g. saltwater)</span></div>
+      </div>
+      <div class="preread-card">
+        <h4 style="color:#1abc9c">🌡️ Temperature & Solubility</h4>
+        <div class="key-fact"><span class="key-fact-icon">🔥</span><span class="key-fact-text">Hotter water = more solid dissolves (usually)</span></div>
+        <div class="key-fact"><span class="key-fact-icon">☕</span><span class="key-fact-text">Example: more sugar dissolves in hot tea than cold water</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🛑</span><span class="key-fact-text"><strong>Saturated solution</strong> — no more solute can dissolve at that temperature</span></div>
+      </div>
+      <div class="preread-card">
+        <h4 style="color:#1abc9c">🔄 Reversible Change</h4>
+        <div class="key-fact"><span class="key-fact-icon">🔬</span><span class="key-fact-text">Dissolving is a <strong>physical change</strong> — no new substance is made</span></div>
+        <div class="key-fact"><span class="key-fact-icon">↩️</span><span class="key-fact-text">It can be reversed by <strong>evaporation</strong> — heat the solution, water evaporates, solid left behind</span></div>
+        <div class="key-fact"><span class="key-fact-icon">🧂</span><span class="key-fact-text">This is how sea salt is made — evaporate seawater!</span></div>
+      </div>
+      <div class="preread-card">
+        <h4 style="color:#1abc9c">🔬 Scientific Enquiry</h4>
+        <div class="key-fact"><span class="key-fact-icon">📊</span><span class="key-fact-text">To compare solubility: use same amount of solvent, same temperature, same stirring</span></div>
+        <div class="key-fact"><span class="key-fact-icon">⚖️</span><span class="key-fact-text">Add measured amounts of solute until no more dissolves = find solubility</span></div>
+        <div class="key-fact"><span class="key-fact-icon">📈</span><span class="key-fact-text">Plot a solubility curve — shows how solubility changes with temperature</span></div>
+      </div>
+    </div>
+    <div class="preread-equation">Solute + Solvent → Solution &nbsp;·&nbsp; (e.g. Salt + Water → Saltwater)</div>
+    <div style="font-size:0.8rem;font-weight:700;color:#0e6655;margin-top:8px;">💡 Memory trick: the SOLute diSOLves in the SOLvent to make a SOLution — all start with SOL!</div>
+    <button class="preread-ready" style="background:#1abc9c" onclick="this.parentElement.style.display='none'">Got it — let's practise! ✅</button>
+  </div>
+  <p class="section-sub">🃏 Flashcards — say the answer out loud, then tap to check!</p>
+  <div class="flashcard-area">
+    <div class="card-counter" id="solubilityCounter"></div>
+    <div class="flashcard" onclick="flipCard('solubility')">
+      <div class="card-face" id="solubilityFace"><span class="card-label">Question</span><span class="card-text"></span><span class="card-hint">Tap to reveal answer</span></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="solubilityBar" style="width:0%"></div></div>
+    <div class="score-display" id="solubilityScore">Got It: 0 | Not Yet: 0</div>
+    <div class="card-controls">
+      <button class="btn-prev" onclick="prevCard('solubility')">← Prev</button>
+      <button class="btn-flip" onclick="flipCard('solubility')">Flip</button>
+      <button class="btn-next" onclick="nextCard('solubility')">Next →</button>
+    </div>
+    <div class="self-assess" id="solubilityAssess" style="display:none">
+      <button class="btn-gotit" onclick="markCard('solubility',true)">✅ Got It!</button>
+      <button class="btn-notyet" onclick="markCard('solubility',false)">❌ Not Yet</button>
+    </div>
+    <div style="margin-top:10px;"><button class="btn-shuffle" onclick="shuffleCards('solubility')">🔀 Shuffle</button></div>
+  </div>
+  <hr class="divider">
+  <p class="section-sub">✏️ Fill in the Blanks</p>
+  <div id="solubilityCloze"></div>
+  <div style="text-align:center;"><button class="check-btn" onclick="checkCloze('solubility')">Check My Answers</button><div class="cloze-result" id="solubilityClozeResult"></div></div>
+  <hr class="divider">
+  <p class="section-sub">🧠 Brain Dump</p>
+  <div id="solubilityBrain"></div>
+  <hr class="divider">
+  <p class="section-sub">📖 Key Word Glossary</p>
+  <div id="solubilityGlossary"></div>
+</div>
+
+</main>
+
+<script>
+const DATA = {
+  cells: {
+    cards: [
+      {q:"What are the 5 main parts of an animal cell?", a:"Nucleus, cell membrane, cytoplasm, mitochondria, ribosomes."},
+      {q:"What extra parts does a plant cell have that an animal cell does not?", a:"Cell wall, chloroplasts, and a large vacuole."},
+      {q:"What does the nucleus do?", a:"Controls the cell's activity."},
+      {q:"What does the cell membrane do?", a:"Controls what comes into and out of the cell."},
+      {q:"What do mitochondria do?", a:"Make energy for the cell (through respiration)."},
+      {q:"What do ribosomes do?", a:"Make proteins for the cell."},
+      {q:"What is the cytoplasm?", a:"The jelly-like substance where chemical reactions happen."},
+      {q:"What is the cell wall made of in plant cells?", a:"Cellulose — it gives the plant cell a rigid shape."},
+      {q:"What is the vacuole in a plant cell?", a:"A large space filled with cell sap that helps keep the plant rigid."},
+      {q:"What is the order of organisation from smallest to largest?", a:"Organelles → Cells → Tissues → Organs → Organ systems → Organism."},
+      {q:"What is a tissue?", a:"A group of similar cells working together to do the same job."},
+      {q:"Give an example of a tissue.", a:"Muscle tissue, nervous tissue, blood."},
+      {q:"What is an organ?", a:"A group of different tissues working together to do a job."},
+      {q:"Give 3 examples of organs.", a:"Heart, lungs, brain, liver, kidneys, stomach, skin."},
+      {q:"What is an organ system?", a:"A group of organs working together to carry out a major body function."},
+      {q:"Give an example of an organ system.", a:"The digestive system — mouth, gullet, stomach, small intestine, large intestine all work together."},
+      {q:"What is an organism?", a:"A complete living thing made up of all its organ systems working together."},
+      {q:"How are the organs in a system linked?", a:"By tubes or vessels, e.g. blood vessels, the gullet."},
+      {q:"What level comes between cells and organs?", a:"Tissues."},
+      {q:"What level comes between organs and organism?", a:"Organ systems."},
+    ],
+    cloze: [
+      {sentence:"The _____ controls all of the cell's activity.", blanks:["nucleus"], hint:"nucleus"},
+      {sentence:"The cell _____ controls what enters and leaves the cell.", blanks:["membrane"], hint:"membrane"},
+      {sentence:"Mitochondria make _____ for the cell through respiration.", blanks:["energy"], hint:"energy"},
+      {sentence:"Plant cells have a cell _____, chloroplasts, and a large _____ that animal cells do not.", blanks:["wall","vacuole"], hint:"wall / vacuole"},
+      {sentence:"A group of similar cells working together is called a _____.", blanks:["tissue"], hint:"tissue"},
+      {sentence:"A group of different tissues working together is called an _____.", blanks:["organ"], hint:"organ"},
+      {sentence:"A group of organs working together is called an organ _____.", blanks:["system"], hint:"system"},
+      {sentence:"The order from smallest to largest is: organelles → cells → tissues → organs → organ systems → _____.", blanks:["organism"], hint:"organism"},
+    ],
+    brain: [
+      {prompt:"Write out the full order of organisation from smallest to largest (6 levels):", lines:6},
+      {prompt:"List 3 differences between a plant cell and an animal cell:", lines:3},
+      {prompt:"Name 3 organs and the organ system each one belongs to:", lines:3},
+    ],
+    glossary:["Nucleus","Cell membrane","Cytoplasm","Mitochondria","Ribosomes","Cell wall","Chloroplast","Vacuole","Tissue","Organ","Organ system","Organism","Cellulose"],
+  },
+
+  repro: {
+    cards: [
+      {q:"What is sexual reproduction?", a:"When a sperm cell fertilises an egg cell to create a new organism."},
+      {q:"What are sperm and egg cells called?", a:"Gametes (sex cells)."},
+      {q:"How is a sperm cell adapted for its job?", a:"It has a tail to swim, lots of mitochondria for energy, and a head containing DNA."},
+      {q:"How is an egg cell adapted for its job?", a:"It is large, contains nutrients for the embryo, and has a protective membrane."},
+      {q:"What is fertilisation?", a:"When the nucleus of a sperm cell fuses with the nucleus of an egg cell."},
+      {q:"What happens after fertilisation?", a:"The fertilised egg (zygote) divides and grows into an embryo, then a foetus."},
+      {q:"Where does fertilisation take place in humans?", a:"In the fallopian tube (oviduct)."},
+      {q:"What is the difference between internal and external fertilisation?", a:"Internal = fertilisation inside the body (mammals, reptiles, birds). External = outside the body in water (fish, amphibians)."},
+      {q:"What is the role of the placenta?", a:"It passes nutrients and oxygen from the mother to the developing baby, and removes waste."},
+      {q:"What is a zygote?", a:"A fertilised egg cell — the first cell of a new organism."},
+    ],
+    cloze: [
+      {sentence:"Sperm and egg cells are called _____ or sex cells.", blanks:["gametes"], hint:"gametes"},
+      {sentence:"Fertilisation is when the sperm _____ fuses with the egg nucleus.", blanks:["nucleus"], hint:"nucleus"},
+      {sentence:"A sperm cell has a _____ to help it swim to the egg.", blanks:["tail"], hint:"tail"},
+      {sentence:"After fertilisation, the zygote divides and becomes an _____.", blanks:["embryo"], hint:"embryo"},
+      {sentence:"Fish and amphibians use _____ fertilisation — it happens outside the body.", blanks:["external"], hint:"external"},
+    ],
+    brain: [
+      {prompt:"Write 3 ways a sperm cell is adapted for its function:", lines:3},
+      {prompt:"Explain the difference between internal and external fertilisation — give one example of each:", lines:3},
+    ],
+    glossary:["Gamete","Fertilisation","Zygote","Embryo","Sperm cell","Egg cell","Placenta","Internal fertilisation","External fertilisation"],
+  },
+
+  verts: {
+    cards: [
+      {q:"What is a vertebrate?", a:"An animal with a backbone."},
+      {q:"What is an invertebrate?", a:"An animal without a backbone."},
+      {q:"Name the 5 vertebrate groups.", a:"Fish, Amphibians, Reptiles, Birds, Mammals."},
+      {q:"What are the features of fish?", a:"Scaly skin, breathe using gills, swim using fins, external fertilisation."},
+      {q:"What are the features of amphibians?", a:"Smooth skin, live on land and in water, breathe using lungs, external fertilisation. Example: frog."},
+      {q:"What are the features of reptiles?", a:"Scaly skin, live on land, lay eggs with soft shells, internal fertilisation. Example: lizard."},
+      {q:"What are the features of birds?", a:"Feathers and wings, breathe with lungs, lay hard-shelled eggs, internal fertilisation. Example: eagle."},
+      {q:"What are the features of mammals?", a:"Hair or fur, internal fertilisation, give birth to live young, produce milk. Example: whale."},
+      {q:"What does 'internal fertilisation' mean?", a:"Fertilisation happens inside the female's body."},
+      {q:"What does 'external fertilisation' mean?", a:"Fertilisation happens outside the body, usually in water."},
+      {q:"Which vertebrate group breathes using gills?", a:"Fish."},
+      {q:"Which two vertebrate groups use external fertilisation?", a:"Fish and amphibians."},
+    ],
+    cloze: [
+      {sentence:"A vertebrate is an animal that has a _____.", blanks:["backbone"], hint:"backbone"},
+      {sentence:"Fish breathe using _____ and swim using _____.", blanks:["gills","fins"], hint:"gills / fins"},
+      {sentence:"Mammals have _____ or fur and give birth to _____ young.", blanks:["hair","live"], hint:"hair / live"},
+      {sentence:"Reptiles have _____ skin and lay eggs with _____ shells.", blanks:["scaly","soft"], hint:"scaly / soft"},
+      {sentence:"Birds have _____ and wings and lay eggs with _____ shells.", blanks:["feathers","hard"], hint:"feathers / hard"},
+    ],
+    brain: [
+      {prompt:"Write the features of all 5 vertebrate groups from memory:", lines:5},
+      {prompt:"Which two groups use external fertilisation? Why do you think this is linked to where they live?", lines:2},
+    ],
+    glossary:["Vertebrate","Invertebrate","Fish","Amphibian","Reptile","Bird","Mammal","Internal fertilisation","External fertilisation","Gills","Backbone"],
+  },
+
+  photo: {
+    cards: [
+      {q:"What is photosynthesis?", a:"A chemical process that turns sunlight, water and carbon dioxide into glucose and oxygen."},
+      {q:"Where does photosynthesis mainly happen?", a:"In the leaves."},
+      {q:"Name the 4 things needed for photosynthesis.", a:"Sunlight, chlorophyll, water, carbon dioxide."},
+      {q:"What is chlorophyll?", a:"A green chemical in chloroplasts that absorbs sunlight."},
+      {q:"Write the word equation for photosynthesis.", a:"Carbon dioxide + Water → Glucose + Oxygen (using sunlight)."},
+      {q:"What are stomata?", a:"Tiny holes on the underside of a leaf — carbon dioxide enters, oxygen exits."},
+      {q:"Why are leaves broad?", a:"To give a big surface area for absorbing light."},
+      {q:"What do plants absorb through their roots?", a:"Water and minerals from the soil."},
+      {q:"What is glucose used for by plants?", a:"As food — for energy and to build new cells."},
+      {q:"What are the reactants in photosynthesis?", a:"Carbon dioxide and water."},
+      {q:"What are the products of photosynthesis?", a:"Glucose and oxygen."},
+    ],
+    cloze: [
+      {sentence:"The word equation is: Carbon dioxide + Water → _____ + Oxygen", blanks:["glucose"], hint:"glucose"},
+      {sentence:"Chlorophyll is found inside structures called _____.", blanks:["chloroplasts"], hint:"chloroplasts"},
+      {sentence:"The bottom of the leaf has tiny holes called _____ that let gases move in and out.", blanks:["stomata"], hint:"stomata"},
+      {sentence:"Plants absorb _____ from the soil through their roots to keep healthy.", blanks:["minerals"], hint:"minerals"},
+      {sentence:"The 4 things needed for photosynthesis are sunlight, _____, water and carbon dioxide.", blanks:["chlorophyll"], hint:"chlorophyll"},
+    ],
+    brain: [
+      {prompt:"Write the word equation for photosynthesis from memory:", lines:1},
+      {prompt:"Explain 2 reasons why leaves are good at photosynthesis:", lines:2},
+    ],
+    glossary:["Photosynthesis","Chlorophyll","Chloroplast","Glucose","Stomata","Reactant","Product"],
+  },
+
+  food: {
+    cards: [
+      {q:"What does an arrow in a food chain mean?", a:"The direction energy moves — what is eaten by what."},
+      {q:"What is a producer?", a:"A plant — it stores energy from the Sun."},
+      {q:"What is a primary consumer?", a:"An animal that eats producers (plants)."},
+      {q:"What is a secondary consumer?", a:"An animal that eats primary consumers."},
+      {q:"What is a tertiary consumer?", a:"An animal that eats secondary consumers."},
+      {q:"What is a food web?", a:"Lots of food chains joined together."},
+      {q:"If minnows are removed from a food web, what might happen to tadpoles?", a:"Tadpole numbers might increase because there are fewer minnows to eat them."},
+      {q:"What is a predator?", a:"An animal that hunts and eats other animals."},
+      {q:"What is prey?", a:"An animal that is hunted and eaten by predators."},
+    ],
+    cloze: [
+      {sentence:"All plants are called _____ because they store energy from the Sun.", blanks:["producers"], hint:"producers"},
+      {sentence:"All animals are called _____ because they eat other living things.", blanks:["consumers"], hint:"consumers"},
+      {sentence:"Arrows in a food chain show the direction _____ moves.", blanks:["energy"], hint:"energy"},
+      {sentence:"A _____ consumer eats plants; a _____ consumer eats primary consumers.", blanks:["primary","secondary"], hint:"primary / secondary"},
+      {sentence:"A food _____ is lots of food chains joined together.", blanks:["web"], hint:"web"},
+    ],
+    brain: [
+      {prompt:"Write a food chain with 4 organisms — label producer, primary, secondary, tertiary consumer:", lines:4},
+      {prompt:"What might happen if all the producers in a food web died? Give 2 consequences:", lines:2},
+    ],
+    glossary:["Producer","Consumer","Primary consumer","Secondary consumer","Tertiary consumer","Food web","Predator","Prey"],
+  },
+
+  eco: {
+    cards: [
+      {q:"What is an ecosystem?", a:"All the living organisms in one area, plus their environment."},
+      {q:"What does interdependent mean?", a:"Organisms need each other to survive."},
+      {q:"Why do almost all living things depend on plants?", a:"Plants capture the Sun's energy — this passes to animals when they eat plants."},
+      {q:"What gas do plants give out during photosynthesis?", a:"Oxygen."},
+      {q:"What gas do plants take in during photosynthesis?", a:"Carbon dioxide."},
+      {q:"What does 'respire' mean?", a:"To breathe — animals take in oxygen and give out carbon dioxide."},
+      {q:"Why would animals die without plants?", a:"No plants means no oxygen and no food energy in the ecosystem."},
+    ],
+    cloze: [
+      {sentence:"An ecosystem is all the living organisms in one area, plus their _____.", blanks:["environment"], hint:"environment"},
+      {sentence:"Organisms in an ecosystem are _____ — they need each other to survive.", blanks:["interdependent"], hint:"interdependent"},
+      {sentence:"During photosynthesis, plants give out _____ and take in _____.", blanks:["oxygen","carbon dioxide"], hint:"oxygen / carbon dioxide"},
+      {sentence:"Animals _____ — they take in oxygen and give out carbon dioxide.", blanks:["respire"], hint:"respire"},
+      {sentence:"Without plants, there would not be enough _____ in the air for animals to breathe.", blanks:["oxygen"], hint:"oxygen"},
+    ],
+    brain: [
+      {prompt:"Explain in 3 sentences why almost all living things depend on plants:", lines:3},
+      {prompt:"What would happen if all plants in an ecosystem died? Write 2 consequences:", lines:2},
+    ],
+    glossary:["Ecosystem","Organism","Interdependent","Photosynthesis","Respiration","Environment"],
+  },
+
+  dna: {
+    cards: [
+      {q:"What does most cells contain that controls characteristics?", a:"A nucleus."},
+      {q:"What are chromosomes?", a:"Long lengths of DNA found in the nucleus."},
+      {q:"How many chromosomes do humans have?", a:"46 (23 pairs)."},
+      {q:"What is a gene?", a:"A short length of DNA that controls a characteristic."},
+      {q:"What is heredity?", a:"When genes are passed from parents to their children."},
+      {q:"What is a hereditary characteristic?", a:"A feature passed on from parents, like eye colour."},
+      {q:"Who first built a model of DNA?", a:"Crick and Watson, using data from Wilkins and Franklin."},
+      {q:"What is the structure of a DNA molecule?", a:"A double helix — two chains twisted together in a spiral."},
+      {q:"What does DNA stand for?", a:"Deoxyribonucleic acid."},
+      {q:"Why does a baby have a mix of features from both parents?", a:"It inherits genes from both mum and dad — so gets a mixture of characteristics."},
+    ],
+    cloze: [
+      {sentence:"Most cells have a _____, which contains chromosomes.", blanks:["nucleus"], hint:"nucleus"},
+      {sentence:"Chromosomes are long lengths of _____, which is a list of chemical instructions.", blanks:["DNA"], hint:"DNA"},
+      {sentence:"A _____ is a short length of DNA that controls a characteristic.", blanks:["gene"], hint:"gene"},
+      {sentence:"When genes are passed from parent to child, this is called _____.", blanks:["heredity"], hint:"heredity"},
+      {sentence:"DNA is shaped like a _____ — two chains twisted together.", blanks:["double helix"], hint:"double helix"},
+    ],
+    brain: [
+      {prompt:"Explain the chain: nucleus → chromosome → gene → characteristic:", lines:4},
+      {prompt:"Why might a child have some features from Mum and some from Dad? Write 2 sentences:", lines:2},
+    ],
+    glossary:["Nucleus","Chromosome","DNA","Gene","Heredity","Characteristic","Double helix"],
+  },
+
+  var: {
+    cards: [
+      {q:"What is variation?", a:"The differences between living things."},
+      {q:"Why do different species vary so much?", a:"Because they have very different genes."},
+      {q:"What is continuous variation? Give an example.", a:"When a feature can be any value in a range, e.g. height or weight."},
+      {q:"What is discontinuous variation? Give an example.", a:"When a feature can only be certain values, e.g. blood group (A, B, AB, O)."},
+      {q:"What causes variation within the same species?", a:"Both genes AND the environment."},
+      {q:"What type of graph shows discontinuous variation?", a:"A bar chart with gaps between the bars."},
+      {q:"What type of graph shows continuous variation?", a:"A histogram — bars touching, no gaps."},
+      {q:"Give an example of an environmental characteristic.", a:"Hair style, scars, language spoken."},
+      {q:"Is blood group an example of continuous or discontinuous variation?", a:"Discontinuous — there are only 4 possible groups."},
+    ],
+    cloze: [
+      {sentence:"Variation is the _____ between living things.", blanks:["differences"], hint:"differences"},
+      {sentence:"Continuous variation means a feature can be _____ value, like height.", blanks:["any"], hint:"any"},
+      {sentence:"Blood group is an example of _____ variation — there are only 4 groups.", blanks:["discontinuous"], hint:"discontinuous"},
+      {sentence:"Variation within a species can be caused by both _____ and the environment.", blanks:["genes"], hint:"genes"},
+      {sentence:"A continuous variation graph has _____ between the bars.", blanks:["no gaps"], hint:"no gaps"},
+    ],
+    brain: [
+      {prompt:"Give 2 examples of continuous variation and explain why:", lines:2},
+      {prompt:"Give 2 examples of discontinuous variation and explain why:", lines:2},
+    ],
+    glossary:["Variation","Continuous variation","Discontinuous variation","Characteristic","Environmental factor","Species"],
+  },
+
+  states: {
+    cards: [
+      {q:"What are the three states of matter?", a:"Solid, liquid and gas."},
+      {q:"Describe the particles in a solid.", a:"Closely packed in a fixed arrangement, vibrate in place. Cannot flow or be compressed."},
+      {q:"Describe the particles in a liquid.", a:"Close together but can move around each other. Can flow but cannot be compressed."},
+      {q:"Describe the particles in a gas.", a:"Far apart, moving fast in all directions. Can flow and be compressed."},
+      {q:"What is melting?", a:"When a solid is heated and turns into a liquid."},
+      {q:"What is freezing?", a:"When a liquid cools and turns into a solid."},
+      {q:"What is evaporation/boiling?", a:"When a liquid is heated and turns into a gas."},
+      {q:"What is condensation?", a:"When a gas cools and turns into a liquid."},
+      {q:"What is sublimation?", a:"When a solid turns directly into a gas without becoming a liquid first."},
+      {q:"What is the melting point of water?", a:"0°C."},
+      {q:"What is the boiling point of water?", a:"100°C."},
+      {q:"What happens to particles when a substance is heated?", a:"They gain energy, move faster and spread further apart."},
+    ],
+    cloze: [
+      {sentence:"The three states of matter are solid, _____ and gas.", blanks:["liquid"], hint:"liquid"},
+      {sentence:"When a solid heats up and becomes a liquid, this is called _____.", blanks:["melting"], hint:"melting"},
+      {sentence:"When a gas cools and becomes a liquid, this is called _____.", blanks:["condensation"], hint:"condensation"},
+      {sentence:"Water melts at ___°C and boils at ___°C.", blanks:["0","100"], hint:"0 / 100"},
+      {sentence:"Particles in a gas are far apart and move _____ in all directions.", blanks:["fast"], hint:"fast"},
+    ],
+    brain: [
+      {prompt:"Describe the particles in all 3 states of matter:", lines:3},
+      {prompt:"Name all 5 changes of state and what temperature change causes each:", lines:5},
+    ],
+    glossary:["Solid","Liquid","Gas","Melting","Freezing","Evaporation","Condensation","Sublimation","Particle","Melting point","Boiling point"],
+  },
+
+  metals: {
+    cards: [
+      {q:"Give 4 properties of metals.", a:"Shiny, good conductors of heat and electricity, strong, malleable (can be bent/shaped)."},
+      {q:"Give 4 properties of non-metals.", a:"Dull, poor conductors (insulators), brittle or soft, not malleable."},
+      {q:"What does 'malleable' mean?", a:"Can be bent or hammered into shape without breaking."},
+      {q:"What does 'conductor' mean?", a:"A material that allows heat or electricity to pass through easily."},
+      {q:"What does 'insulator' mean?", a:"A material that does not allow heat or electricity to pass through easily."},
+      {q:"Is carbon a metal or non-metal?", a:"Non-metal."},
+      {q:"Name 3 metals and a use for each.", a:"Iron (bridges/buildings), copper (electrical wires), aluminium (drink cans/planes)."},
+      {q:"What is an alloy?", a:"A mixture of two or more metals, e.g. steel is iron + carbon."},
+      {q:"Why is copper used for electrical wires?", a:"It is a very good conductor of electricity and is flexible."},
+      {q:"Where are metals found on the periodic table?", a:"On the left and middle of the periodic table."},
+    ],
+    cloze: [
+      {sentence:"Metals are good _____ of heat and electricity.", blanks:["conductors"], hint:"conductors"},
+      {sentence:"Non-metals are poor conductors — they are called _____.", blanks:["insulators"], hint:"insulators"},
+      {sentence:"A metal that can be bent into shape is described as _____.", blanks:["malleable"], hint:"malleable"},
+      {sentence:"Steel is an _____ — a mixture of iron and carbon.", blanks:["alloy"], hint:"alloy"},
+      {sentence:"Copper is used for electrical wires because it is a good _____.", blanks:["conductor"], hint:"conductor"},
+    ],
+    brain: [
+      {prompt:"List 4 properties of metals and 4 properties of non-metals:", lines:4},
+      {prompt:"Give 3 metals and explain one use of each and why that metal is good for that use:", lines:3},
+    ],
+    glossary:["Metal","Non-metal","Conductor","Insulator","Malleable","Alloy","Periodic table","Element"],
+  },
+
+  circuits: {
+    cards: [
+      {q:"What is an electric current?", a:"The flow of electrical charge (electrons) around a circuit."},
+      {q:"What is voltage?", a:"The push that drives the current around the circuit. Measured in volts (V)."},
+      {q:"What is resistance?", a:"How much a component opposes the flow of current. Measured in ohms (Ω)."},
+      {q:"What is the difference between a series circuit and a parallel circuit?", a:"Series: components in a single loop. Parallel: components on separate branches."},
+      {q:"What happens to bulbs in a series circuit if one breaks?", a:"They all go out — the circuit is broken."},
+      {q:"What happens to bulbs in a parallel circuit if one breaks?", a:"The others stay on — each has its own loop."},
+      {q:"What does an ammeter measure?", a:"Current — measured in amps (A)."},
+      {q:"What does a voltmeter measure?", a:"Voltage — measured in volts (V)."},
+      {q:"What is the symbol for a battery in a circuit diagram?", a:"Two parallel lines — one long (positive) and one short (negative)."},
+      {q:"What is a conductor in a circuit?", a:"A material that allows current to flow, e.g. copper wire."},
+      {q:"What unit is current measured in?", a:"Amps (A)."},
+      {q:"What unit is voltage measured in?", a:"Volts (V)."},
+    ],
+    cloze: [
+      {sentence:"Electric current is the flow of _____ around a circuit.", blanks:["charge"], hint:"charge"},
+      {sentence:"In a _____ circuit, if one bulb breaks, all the others go out.", blanks:["series"], hint:"series"},
+      {sentence:"In a _____ circuit, if one bulb breaks, the others stay on.", blanks:["parallel"], hint:"parallel"},
+      {sentence:"An ammeter measures _____ in amps.", blanks:["current"], hint:"current"},
+      {sentence:"A voltmeter measures _____ in volts.", blanks:["voltage"], hint:"voltage"},
+    ],
+    brain: [
+      {prompt:"Explain the difference between series and parallel circuits — include what happens when a bulb breaks:", lines:3},
+      {prompt:"Name 3 things you would find in a simple circuit and the job each one does:", lines:3},
+    ],
+    glossary:["Current","Voltage","Resistance","Series circuit","Parallel circuit","Ammeter","Voltmeter","Conductor","Insulator","Amps","Volts","Ohms"],
+  },
+
+  energy: {
+    cards: [
+      {q:"Name 6 energy stores.", a:"Chemical, kinetic, thermal, gravitational potential, elastic potential, nuclear."},
+      {q:"What is kinetic energy?", a:"The energy an object has because it is moving."},
+      {q:"What is gravitational potential energy?", a:"The energy stored in an object because of its height above the ground."},
+      {q:"What is thermal energy?", a:"Energy stored as heat in a substance."},
+      {q:"What is chemical energy?", a:"Energy stored in chemical bonds, e.g. in food, fuel or batteries."},
+      {q:"What is elastic potential energy?", a:"Energy stored in a stretched or compressed spring or elastic band."},
+      {q:"Name 4 ways energy can be transferred.", a:"Mechanically (forces), electrically, by heating, by radiation (light/sound)."},
+      {q:"What is the law of conservation of energy?", a:"Energy cannot be created or destroyed — it can only be transferred from one store to another."},
+      {q:"What is a renewable energy resource? Give 2 examples.", a:"One that will not run out — e.g. solar, wind, tidal, hydroelectric."},
+      {q:"What is a non-renewable energy resource? Give 2 examples.", a:"One that will run out — e.g. coal, oil, natural gas (fossil fuels) and nuclear."},
+      {q:"What energy transfer happens in a light bulb?", a:"Electrical energy → light energy + thermal (heat) energy."},
+      {q:"Why are fossil fuels non-renewable?", a:"They take millions of years to form and we are using them much faster than they can be replaced."},
+    ],
+    cloze: [
+      {sentence:"Energy cannot be created or destroyed — this is called the law of _____ of energy.", blanks:["conservation"], hint:"conservation"},
+      {sentence:"The energy stored in a moving object is called _____ energy.", blanks:["kinetic"], hint:"kinetic"},
+      {sentence:"Energy stored in food and fuel is _____ energy.", blanks:["chemical"], hint:"chemical"},
+      {sentence:"Solar, wind and tidal are examples of _____ energy resources.", blanks:["renewable"], hint:"renewable"},
+      {sentence:"Coal, oil and gas are _____ fuels — they are non-renewable.", blanks:["fossil"], hint:"fossil"},
+    ],
+    brain: [
+      {prompt:"Name all 6 energy stores from memory:", lines:6},
+      {prompt:"Explain the difference between renewable and non-renewable energy — give 2 examples of each:", lines:3},
+    ],
+    glossary:["Kinetic energy","Gravitational potential energy","Thermal energy","Chemical energy","Elastic potential energy","Energy transfer","Conservation of energy","Renewable","Non-renewable","Fossil fuel"],
+  },
+
+  particles: {
+    cards: [
+      {q:"What is particle theory?", a:"All materials are made up of tiny particles — their arrangement explains the properties of solids, liquids and gases."},
+      {q:"Describe particles in a solid.", a:"Closely packed in a fixed arrangement, held by strong forces. They vibrate but cannot move around."},
+      {q:"Describe particles in a liquid.", a:"Close together but can move past each other. Weaker forces than in solids. Can flow."},
+      {q:"Describe particles in a gas.", a:"Far apart, very weak forces. Move quickly in all directions. Fill any container."},
+      {q:"Why can solids not be compressed?", a:"Particles are already packed tightly — there is no space to push them closer."},
+      {q:"Why can gases be compressed?", a:"There is lots of empty space between particles so they can be pushed closer together."},
+      {q:"Why do solids keep their shape?", a:"Particles are held in fixed positions by strong forces — they cannot move around."},
+      {q:"Why do liquids take the shape of their container?", a:"Particles can move past each other but stay close together, so they flow to fill the shape."},
+      {q:"Why do gases fill their container?", a:"Particles move fast in all directions and spread out to fill any space."},
+      {q:"What is diffusion?", a:"Particles spreading from an area of high concentration to an area of low concentration."},
+      {q:"Give an example of diffusion.", a:"A smell spreading across a room — perfume particles move from where there are lots to where there are fewer."},
+      {q:"What is Brownian motion?", a:"The random movement of particles suspended in a liquid or gas, caused by collisions with other particles."},
+      {q:"What happens to particles when temperature increases?", a:"They gain more energy, move faster, and spread further apart."},
+      {q:"What is density?", a:"How much mass is packed into a given volume. Solids usually most dense, gases least dense."},
+      {q:"What causes a substance to expand when heated?", a:"Particles gain energy, move faster, spaces between them increase — the substance gets bigger."},
+    ],
+    cloze: [
+      {sentence:"All materials are made up of tiny _____.", blanks:["particles"], hint:"particles"},
+      {sentence:"In a solid, particles are held in _____ positions by strong forces.", blanks:["fixed"], hint:"fixed"},
+      {sentence:"In a gas, particles are _____ apart and move quickly in all directions.", blanks:["far"], hint:"far"},
+      {sentence:"Diffusion is when particles spread from high _____ to low concentration.", blanks:["concentration"], hint:"concentration"},
+      {sentence:"When temperature increases, particles gain _____ and move faster.", blanks:["energy"], hint:"energy"},
+      {sentence:"Brownian motion is the _____ movement of particles in a liquid or gas.", blanks:["random"], hint:"random"},
+    ],
+    brain: [
+      {prompt:"Describe particles in all 3 states — arrangement, movement and forces:", lines:3},
+      {prompt:"Explain what diffusion is and give one real-life example:", lines:2},
+    ],
+    glossary:["Particle theory","Diffusion","Concentration","Brownian motion","Density","Compression","Expansion"],
+  },
+
+  chroma: {
+    cards: [
+      {q:"What is chromatography used for?", a:"To separate mixtures of substances — especially dyes or inks — to find what they contain."},
+      {q:"What are the two phases in chromatography?", a:"Stationary phase (paper — stays still) and mobile phase (solvent — moves up)."},
+      {q:"What is the stationary phase?", a:"The chromatography paper — it stays still throughout the experiment."},
+      {q:"What is the mobile phase?", a:"The solvent (e.g. water) — it moves up the paper carrying substances with it."},
+      {q:"Why do different substances travel different distances?", a:"They have different solubilities — more soluble substances travel further up the paper."},
+      {q:"How do you know if a substance is pure from a chromatogram?", a:"It shows only one spot — a pure substance does not separate into multiple spots."},
+      {q:"What is an Rf value?", a:"Distance the substance travels divided by the distance the solvent travels."},
+      {q:"Why must the starting spot be above the solvent level?", a:"So the ink is not washed into the solvent before it can travel up the paper."},
+      {q:"What does it mean if two substances have the same Rf value?", a:"They are likely to be the same substance."},
+      {q:"What does a chromatogram with many spots tell you?", a:"The original substance was a mixture containing several different components."},
+    ],
+    cloze: [
+      {sentence:"Chromatography separates _____ of substances like inks and dyes.", blanks:["mixtures"], hint:"mixtures"},
+      {sentence:"The _____ phase is the paper; the _____ phase is the solvent.", blanks:["stationary","mobile"], hint:"stationary / mobile"},
+      {sentence:"A pure substance shows only _____ spot on a chromatogram.", blanks:["one"], hint:"one"},
+      {sentence:"Different substances travel different distances because they have different _____.", blanks:["solubilities"], hint:"solubilities"},
+      {sentence:"Rf value = distance substance travels ÷ distance _____ travels.", blanks:["solvent"], hint:"solvent"},
+    ],
+    brain: [
+      {prompt:"Explain step by step how you would carry out paper chromatography:", lines:4},
+      {prompt:"How could you tell from a chromatogram whether a sample was pure or a mixture?", lines:2},
+    ],
+    glossary:["Chromatography","Stationary phase","Mobile phase","Solvent","Rf value","Pure substance","Mixture","Solubility"],
+  },
+
+  solubility: {
+    cards: [
+      {q:"What does soluble mean?", a:"A substance that dissolves in a solvent to form a solution."},
+      {q:"What does insoluble mean?", a:"A substance that does not dissolve in a solvent."},
+      {q:"What is a solute?", a:"The substance that dissolves (e.g. salt or sugar)."},
+      {q:"What is a solvent?", a:"The liquid that does the dissolving (e.g. water)."},
+      {q:"What is a solution?", a:"The mixture formed when a solute dissolves in a solvent."},
+      {q:"What is solubility?", a:"The maximum amount of solute that will dissolve in a given amount of solvent at a given temperature."},
+      {q:"How does temperature affect solubility of a solid?", a:"Usually increases it — more solid dissolves in hot water than cold water."},
+      {q:"What is a saturated solution?", a:"One where no more solute can dissolve at that temperature — it has reached its maximum."},
+      {q:"How do you separate a dissolved solid from water?", a:"By evaporation — heat the solution until the water evaporates, leaving the solid behind."},
+      {q:"Is dissolving a physical or chemical change?", a:"Physical — no new substance is made and it can be reversed by evaporation."},
+    ],
+    cloze: [
+      {sentence:"A substance that dissolves in water is called _____.", blanks:["soluble"], hint:"soluble"},
+      {sentence:"The substance that dissolves is the _____; the liquid is the _____.", blanks:["solute","solvent"], hint:"solute / solvent"},
+      {sentence:"A _____ solution can dissolve no more solute at that temperature.", blanks:["saturated"], hint:"saturated"},
+      {sentence:"Increasing temperature usually _____ how much solid will dissolve.", blanks:["increases"], hint:"increases"},
+      {sentence:"Dissolving is a _____ change — no new substances are made.", blanks:["physical"], hint:"physical"},
+    ],
+    brain: [
+      {prompt:"Explain the difference between solute, solvent and solution — use an example:", lines:3},
+      {prompt:"How would you find out which of three solids is most soluble? Write a method:", lines:3},
+    ],
+    glossary:["Soluble","Insoluble","Solute","Solvent","Solution","Solubility","Saturated solution","Evaporation"],
+  },
+};
+
+/* ── STATE ── */
+const state = {};
+Object.keys(DATA).forEach(t => {
+  state[t] = { idx:0, flipped:false, order:DATA[t].cards.map((_,i)=>i), gotIt:0, notYet:0 };
+});
+
+function shuffle(arr) {
+  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+  return arr;
+}
+
+function renderCard(topic) {
+  const s=state[topic];
+  const card=DATA[topic].cards[s.order[s.idx]];
+  const face=document.getElementById(topic+'Face');
+  s.flipped=false;
+  face.querySelector('.card-label').textContent='Question';
+  face.querySelector('.card-text').textContent=card.q;
+  face.querySelector('.card-hint').textContent='Tap to reveal answer';
+  document.getElementById(topic+'Counter').textContent=`Card ${s.idx+1} of ${DATA[topic].cards.length}`;
+  const assess=document.getElementById(topic+'Assess');
+  if(assess) assess.style.display='none';
+  updateProgress(topic);
+}
+
+function flipCard(topic) {
+  const s=state[topic];
+  const card=DATA[topic].cards[s.order[s.idx]];
+  const face=document.getElementById(topic+'Face');
+  s.flipped=!s.flipped;
+  if(s.flipped){
+    face.querySelector('.card-label').textContent='Answer';
+    face.querySelector('.card-text').textContent=card.a;
+    face.querySelector('.card-hint').textContent='How did you do?';
+    const assess=document.getElementById(topic+'Assess');
+    if(assess) assess.style.display='flex';
+  } else {
+    face.querySelector('.card-label').textContent='Question';
+    face.querySelector('.card-text').textContent=card.q;
+    face.querySelector('.card-hint').textContent='Tap to reveal answer';
+    const assess=document.getElementById(topic+'Assess');
+    if(assess) assess.style.display='none';
+  }
+}
+
+function markCard(topic, gotIt) {
+  const s=state[topic];
+  if(gotIt) s.gotIt++; else s.notYet++;
+  updateProgress(topic);
+  nextCard(topic);
+}
+
+function updateProgress(topic) {
+  const s=state[topic];
+  const total=DATA[topic].cards.length;
+  const done=s.gotIt+s.notYet;
+  const bar=document.getElementById(topic+'Bar');
+  if(bar) bar.style.width=Math.round((s.gotIt/total)*100)+'%';
+  const scoreEl=document.getElementById(topic+'Score');
+  if(scoreEl) scoreEl.textContent=`✅ Got It: ${s.gotIt} | ❌ Not Yet: ${s.notYet}`;
+}
+
+function nextCard(topic) {
+  state[topic].idx=(state[topic].idx+1)%DATA[topic].cards.length;
+  renderCard(topic);
+}
+function prevCard(topic) {
+  state[topic].idx=(state[topic].idx-1+DATA[topic].cards.length)%DATA[topic].cards.length;
+  renderCard(topic);
+}
+function shuffleCards(topic) {
+  shuffle(state[topic].order);
+  state[topic].idx=0;
+  state[topic].gotIt=0;
+  state[topic].notYet=0;
+  renderCard(topic);
+}
+
+/* ── CLOZE ── */
+function buildCloze(topic) {
+  const container=document.getElementById(topic+'Cloze');
+  if(!container) return;
+  container.innerHTML='';
+  DATA[topic].cloze.forEach((item,ci)=>{
+    const card=document.createElement('div');
+    card.className='cloze-card';
+    let html=item.sentence;
+    item.blanks.forEach((blank,bi)=>{
+      html=html.replace('_____',`<input class="cloze-input" data-topic="${topic}" data-ci="${ci}" data-bi="${bi}" data-answer="${blank.toLowerCase()}" placeholder="?" />`);
+    });
+    card.innerHTML=`<p>${html}</p>`;
+    container.appendChild(card);
+  });
+}
+
+function checkCloze(topic) {
+  const inputs=document.querySelectorAll(`.cloze-input[data-topic="${topic}"]`);
+  let correct=0;
+  inputs.forEach(inp=>{
+    const val=inp.value.trim().toLowerCase();
+    const ans=inp.dataset.answer.toLowerCase();
+    if(val===ans){inp.classList.add('correct');inp.classList.remove('wrong');correct++;}
+    else{inp.classList.add('wrong');inp.classList.remove('correct');}
+  });
+  const result=document.getElementById(topic+'ClozeResult');
+  result.style.display='block';
+  const pct=Math.round((correct/inputs.length)*100);
+  result.textContent=`You got ${correct} out of ${inputs.length} correct! (${pct}%)`;
+  result.style.color=pct>=80?'var(--green-dark)':pct>=50?'var(--amber-dark)':'var(--red)';
+}
+
+/* ── BRAIN DUMP ── */
+function buildBrain(topic) {
+  const container=document.getElementById(topic+'Brain');
+  if(!container) return;
+  container.innerHTML='';
+  DATA[topic].brain.forEach(item=>{
+    const card=document.createElement('div');
+    card.className='brain-card';
+    let lines='';
+    for(let i=1;i<=item.lines;i++) lines+=`<div class="brain-line"><span class="line-num">${i}.</span><input class="brain-input" type="text" placeholder="Write here..."></div>`;
+    card.innerHTML=`<h3>${item.prompt}</h3><p>Write in short notes — no full sentences needed.</p><div class="brain-lines">${lines}</div>`;
+    container.appendChild(card);
+  });
+}
+
+/* ── GLOSSARY ── */
+function buildGlossary(topic) {
+  const container=document.getElementById(topic+'Glossary');
+  if(!container) return;
+  container.innerHTML='';
+  DATA[topic].glossary.forEach(word=>{
+    const card=document.createElement('div');
+    card.className='glossary-card';
+    card.innerHTML=`<div class="glossary-word">${word}</div><textarea class="glossary-def" rows="1" placeholder="Write your definition here..."></textarea>`;
+    container.appendChild(card);
+    const ta=card.querySelector('textarea');
+    ta.addEventListener('input',function(){this.style.height='auto';this.style.height=this.scrollHeight+'px';});
+  });
+}
+
+/* ── TABS ── */
+function showTab(id, e) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(e && e.target) e.target.classList.add('active');
+}
+
+/* ── INIT ── */
+Object.keys(DATA).forEach(t=>{
+  renderCard(t);
+  buildCloze(t);
+  buildBrain(t);
+  buildGlossary(t);
+});
+</script>
+</body>
+</html>
